@@ -1,65 +1,44 @@
 import { Schema, model, models } from 'mongoose'
 
-export enum UserRole {
-  LEADER = 'leader',
-  MEMBER = 'member',
-}
-
-interface IRoom {
-  _id?: Schema.Types.ObjectId
-  roomId: Schema.Types.ObjectId
-  userRole: UserRole
-  joinedAt: Date
-  leftAt: Date | null
-}
-
-interface IInvitation {
-  _id?: Schema.Types.ObjectId
-  roomId: Schema.Types.ObjectId
-  invitedBy: Schema.Types.ObjectId
-}
-
-interface IRequestedRooms {
-  roomId: Schema.Types.ObjectId
-}
-
 export interface IUser {
-  _id?: Schema.Types.ObjectId
-  username: string
-  email: string
-  password: string
-  avatar: string
-  isVerified: boolean
-  verifyCode?: string
+  _id?: Schema.Types.ObjectId,
+  username: string,
+  email: string,
+  password: string,
+  avatar?: string | null,
+  isVerified: boolean,
+  verifyCode?: string,
   verifyExpiry?: Date
-  rooms: IRoom[]
-  invitation: IInvitation[]
-  requestedRooms: IRequestedRooms[]
+
 }
 
 const userSchema = new Schema<IUser>(
   {
     username: {
       type: String,
-      min: [2, 'Minimum 2 Character required in Username'],
+      minlength: [2, 'Minimum 2 Character required in Username'],
+      maxlength: [30, 'Maximum 30 characters allowed'],
       required: [true, 'Username Required'],
       unique: true,
+      trim: true,
     },
 
     email: {
       type: String,
       required: [true, 'Email Required'],
+      lowercase: true,
       unique: true,
     },
 
     password: {
       type: String,
       required: [true, 'Password Required'],
+      select: false,
     },
 
     avatar: {
       type: String,
-      default: '',
+      default: null,
     },
 
     isVerified: {
@@ -70,40 +49,14 @@ const userSchema = new Schema<IUser>(
 
     verifyCode: {
       type: String,
+      select: false,
     },
 
     verifyExpiry: {
       type: Date,
+      select: false,
     },
 
-    rooms: [
-      {
-        roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
-        userRole: { type: String, enum: Object.values(UserRole), required: true },
-        joinedAt: { type: Date, default: Date.now },
-      },
-    ],
-
-    invitation: [
-      {
-        roomId: { type: Schema.Types.ObjectId, ref: 'Room', required: true },
-        invitedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-      },
-    ],
-
-    requestedRooms: [
-      {
-        roomId: {
-          type: Schema.Types.ObjectId,
-          ref: 'Room',
-          required: true,
-        },
-        isAccept: {
-          type: Boolean,
-          default: false,
-        },
-      },
-    ],
   },
   { timestamps: true }
 )
