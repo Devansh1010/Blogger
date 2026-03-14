@@ -69,7 +69,6 @@ export async function GET(req: NextRequest) {
         error: {
           code: '500',
           message: 'Internal Server Error',
-          details: error.message,
         },
       },
       StatusCode.INTERNAL_ERROR
