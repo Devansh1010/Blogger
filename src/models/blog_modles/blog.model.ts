@@ -1,8 +1,13 @@
 import { models, Schema, model } from "mongoose";
 
-interface EditorContent {
+export interface EditorBlock {
+  id: string
+  type: string
+  data: unknown
+}
+export interface EditorContent {
     time: number
-    blocks: any[]
+    blocks: EditorBlock[]
     version: string
 }
 

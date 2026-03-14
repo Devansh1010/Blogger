@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     const userInfo = await User.findOne({ _id: userId }).select('-password')
 
     console.log(userInfo)
-    
+
     if (!userInfo)
       return createResponse(
         {
@@ -60,9 +60,8 @@ export async function GET(req: NextRequest) {
       },
       StatusCode.OK
     )
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error Finding User:', error)
-
     return createResponse(
       {
         success: false,
