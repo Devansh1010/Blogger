@@ -36,13 +36,13 @@ export default function ForgotPasswordEmail({ username, resetLink }: ForgotPassw
         </div>
 
         <p style={{ fontSize: '12px', color: '#6B7280' }}>
-          If the button doesn't work, copy and paste this link into your browser:<br/>
+          If the button does not work, copy and paste this link into your browser:<br/>
           <span style={{ color: primaryColor }}>{resetLink}</span>
         </p>
         
         <hr style={{ border: 'none', borderTop: '1px solid #F3F4F6', margin: '20px 0' }} />
         <p style={{ fontSize: '12px', color: '#9CA3AF' }}>
-          If you didn't request this, you can safely ignore this email. Your password will not change.
+          If you did not request this, you can safely ignore this email. Your password will not change.
         </p>
       </div>
     </div>
