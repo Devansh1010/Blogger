@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   try {
     const { username, verifyCode } = await request.json()
 
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ username }).populate('verifyCode verifyExpiry')
 
     if (!user) {
       return createResponse(
@@ -28,9 +28,7 @@ export async function POST(request: Request) {
 
     const isCodeValid = user.verifyCode === verifyCode
 
-    const isExpriyValid = new Date(user.verifyCodeExpires) > new Date()
-
-    console.log(isExpriyValid)
+    const isExpriyValid = new Date(user.verifyExpiry) > new Date()
 
     if (!isCodeValid) {
       return createResponse(
@@ -54,7 +52,7 @@ export async function POST(request: Request) {
 
     user.isVerified = true
     user.verifyCode = undefined
-    user.verifyCodeExpires = undefined
+    user.verifyExpiry = undefined
 
     await user.save()
 

@@ -7,14 +7,14 @@ import { sendVerification } from '@/helpers/sendVerificationEmail'
 export async function POST(request: Request) {
   await dbConnect()
   try {
-    const { username, email, password, fname, lname } = await request.json()
+    const { username, email, password } = await request.json()
 
     const existingUserVerifiedByUsername = await User.findOne({
       username,
       isVerified: true,
     })
 
-    if (!username || !email || !password || !fname || !lname) {
+    if (!username || !email || !password) {
       return createResponse(
         {
           success: false,
@@ -54,11 +54,9 @@ export async function POST(request: Request) {
           { email },
           {
             username,
-            fname,
-            lname,
             password: hashedPassword,
             verifyCode,
-            verifyCodeExpires: new Date(Date.now() + 3600000),
+            verifyExpiry: new Date(Date.now() + 3600000),
           },
           { new: true, runValidators: false }
         )
@@ -100,12 +98,10 @@ export async function POST(request: Request) {
 
       const newUser = await User.create({
         username,
-        fname,
-        lname,
         email,
         password: hashedPassword,
         verifyCode,
-        verifyCodeExpires: expiryDate,
+        verifyExpiry: expiryDate,
         isVerified: false,
       })
 

@@ -25,9 +25,6 @@ export async function POST() {
     } catch (error) {
     console.error('Error Finding User:', error)
 
-    const errorMessage =
-        error instanceof Error ? error.message : "Unknown error"
-
     return createResponse(
         {
             success: false,
@@ -35,7 +32,6 @@ export async function POST() {
             error: {
                 code: '500',
                 message: 'Internal Server Error',
-                details: errorMessage,
             },
         },
         StatusCode.INTERNAL_ERROR

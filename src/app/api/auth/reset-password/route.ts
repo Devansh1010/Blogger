@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { createResponse, StatusCode } from "@/lib/createResponse";
 import { dbConnect } from "@/lib/db";
 import valkey from '@/lib/valkey';
@@ -64,7 +63,7 @@ export async function POST(req: NextRequest) {
             StatusCode.OK
         );
 
-    } catch (error: any) {
+    } catch (error) {
         console.error("RESET_PASSWORD_ERROR:", error);
         return createResponse(
             { success: false, message: "An unexpected error occurred" },

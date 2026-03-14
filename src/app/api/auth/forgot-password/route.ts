@@ -21,12 +21,12 @@ export async function POST(req: NextRequest) {
 
         // 2. Database Connection
         await dbConnect();
-        const isAdminExist = await User.findOne({ email });
+        const isUserExist = await User.findOne({ email });
 
-        console.log(isAdminExist)
+        console.log(isUserExist)
         // 3. Security: Prevent email enumeration
 
-        if (!isAdminExist) {
+        if (!isUserExist) {
             return createResponse(
                 {
                     success: true,
@@ -40,14 +40,14 @@ export async function POST(req: NextRequest) {
         const token = crypto.randomBytes(32).toString('hex');
 
         // 5. Store in Valkey (TTL: 10 min)
-        await valkey.setEx(`reset_token:${token}`, 600, isAdminExist.email);
+        await valkey.setEx(`reset_token:${token}`, 600, isUserExist.email);
 
 
         // 6. Send Email with Token and Username
         const emailResponse = await sendForgotPassword(
            "devanshprajapati36@gmail.com",
             token,
-            isAdminExist.username
+            isUserExist.username
         );
 
         return createResponse(
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
             StatusCode.OK
         );
 
-    } catch (error: any) {
+    } catch (error) {
         console.error("FORGOT_PASSWORD_ERROR:", error);
         return createResponse(
             { success: false, message: "Internal Server Error" },
