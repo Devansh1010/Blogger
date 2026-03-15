@@ -18,3 +18,8 @@ export const signUpSchema = z.object({
   email: emailValidation,
   password: passwordValidation,
 })
+
+export const signInSchema = z.object({
+  email: emailValidation,
+  password: passwordValidation,
+})

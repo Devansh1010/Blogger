@@ -1,10 +1,9 @@
 'use client'
-
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldDescription,
+  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -13,33 +12,36 @@ import { Input } from "@/components/ui/input"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { signInSchema } from "@/lib/schemas/auth/signUpSchema"
+import { z } from "zod"
 
-export function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false
-    })
-
-    if (res?.error) {
-      alert(res.error)
-    } else {
-      alert("Login successful!")
+  const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    try {
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+      })
+    } catch (error) {
+      console.error("Login error:", error)
     }
   }
+
   return (
-    <form
-      className={cn("flex flex-col gap-6", className)} {...props} onSubmit={handleLogin}
-    >
+    <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
@@ -47,32 +49,48 @@ export function LoginForm({
             Enter your email below to login to your account
           </p>
         </div>
-        <Field>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Field>
-        <Field>
-          <div className="flex items-center">
-            <FieldLabel htmlFor="password">Password</FieldLabel>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
-          </div>
-          <Input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Field>
+        <Controller
+          name="email"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-title">
+                Username Or Email
+              </FieldLabel>
+              <Input
+                {...field}
+                id="form-rhf-demo-title"
+                aria-invalid={fieldState.invalid}
+                placeholder="Enter Your Username Or Email"
+                autoComplete="off"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
+        <Controller
+          name="password"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-rhf-demo-title">
+                Password
+              </FieldLabel>
+              <Input
+                {...field}
+                id="form-rhf-demo-title"
+                aria-invalid={fieldState.invalid}
+                placeholder="Enter Your Password"
+                autoComplete="off"
+              />
+              {fieldState.invalid && (
+                <FieldError errors={[fieldState.error]} />
+              )}
+            </Field>
+          )}
+        />
         <Field>
           <Button type="submit">Login</Button>
         </Field>

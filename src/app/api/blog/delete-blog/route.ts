@@ -6,18 +6,17 @@ import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
     try {
+        //Add verify  User
         const auth = await VerifyUser()
 
         if (!auth.success) {
-            return auth.response
+            return createResponse(
+                { success: false, message: "Unauthorized" },
+                StatusCode.UNAUTHORIZED
+            )
         }
 
-        const data = auth.user
-        if (!data) {
-            return createResponse({ success: false, message: 'Unauthorized' }, StatusCode.UNAUTHORIZED)
-        }
-
-        const userId = data.id;
+        const userId = auth.user?._id
 
         const { title } = await req.json();
 

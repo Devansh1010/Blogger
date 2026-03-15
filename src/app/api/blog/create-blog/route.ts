@@ -12,15 +12,13 @@ export async function POST(req: NextRequest) {
         const auth = await VerifyUser()
 
         if (!auth.success) {
-            return auth.response
+            return createResponse(
+                { success: false, message: "Unauthorized" },
+                StatusCode.UNAUTHORIZED
+            )
         }
 
-        const data = auth.user
-        if (!data) {
-            return createResponse({ success: false, message: 'Unauthorized' }, StatusCode.UNAUTHORIZED)
-        }
-
-        const userId = data.id
+        const userId = auth.user?._id
 
         //validate the data
         if (!title) {
@@ -84,7 +82,7 @@ export async function POST(req: NextRequest) {
             slug,
             excerpt,
             author: userId,
-            tags : safeTags,
+            tags: safeTags,
             coverImage,
             isPublished,
             publishedAt,

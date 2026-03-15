@@ -17,15 +17,15 @@ export async function PATCH(
 
     const auth = await VerifyUser()
 
-    if (!auth.success) return auth.response
-
-    const userId = auth.user?.id
-    if (!userId) {
+    if (!auth.success) {
       return createResponse(
         { success: false, message: "Unauthorized" },
         StatusCode.UNAUTHORIZED
       )
     }
+
+    const userId = auth.user?._id
+
 
     await dbConnect()
 

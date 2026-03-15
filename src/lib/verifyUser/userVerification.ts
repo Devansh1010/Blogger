@@ -1,39 +1,17 @@
-import { cookies } from 'next/headers'
-import { createResponse, StatusCode } from '@/lib/createResponse'
-import jwt from 'jsonwebtoken'
-
-
-export interface TokenPayload {
-  id: string
-  username: string
-}
+import { auth } from "@/auth"
 
 export async function VerifyUser() {
-  const token = (await cookies()).get('authToken')?.value
+  const session = await auth()
 
-  if (!token) {
+  if (!session || !session.user) {
     return {
       success: false,
-      response: createResponse(
-        { success: false, message: 'Login required' },
-        StatusCode.UNAUTHORIZED
-      ),
+      user: null
     }
   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as TokenPayload
-    return {
-      success: true,
-      user: decoded,
-    }
-  } catch {
-    return {
-      success: false,
-      response: createResponse(
-        { success: false, message: 'Invalid token' },
-        StatusCode.UNAUTHORIZED
-      ),
-    }
+  return {
+    success: true,
+    user: session.user
   }
 }
