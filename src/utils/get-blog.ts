@@ -4,7 +4,7 @@ import { VerifyUser } from "@/lib/verifyUser/userVerification";
 import Blog from "@/models/blog_modles/blog.model";
 import User from "@/models/user_models/user.model";
 
-export async function GET() {
+export const getBlog = async (slug: string) => {
     try {
 
         const auth = await VerifyUser()
@@ -37,27 +37,20 @@ export async function GET() {
             userId = user._id.toString()
         }
 
-
-        const blogs = await Blog.find({ author: userId })
+        const blog = await Blog.findOne({
+            author: userId,
+            slug: slug
+        })
             .select("title slug excerpt coverImage tags isPublished createdAt author")
             .populate("author", "username")
             .sort({ createdAt: -1 })
             .lean()
 
-        return createResponse(
-            { success: true, message: "Blogs retrieved successfully", data: blogs },
-            StatusCode.OK
-        )
+        return blog ? JSON.parse(JSON.stringify(blog)) : null;
+
 
     } catch (error) {
-        console.error("Error getting blogs:", error)
-
-        return createResponse(
-            {
-                success: false,
-                message: "Internal Server Error",
-            },
-            StatusCode.INTERNAL_ERROR
-        )
+        console.error("Error getting blog:", error);
+        return null;
     }
 }
