@@ -3,6 +3,7 @@ import { dbConnect } from "@/lib/db";
 import { generateSlug } from "@/lib/slug-generater";
 import { VerifyUser } from "@/lib/verifyUser/userVerification";
 import Blog from "@/models/blog_modles/blog.model";
+import User from "@/models/user_models/user.model";
 import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -18,7 +19,26 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        const userId = auth.user?._id
+        await dbConnect()
+
+        let userId = null
+        //User can be either from session or from database based on email, this is to handle the case when user is not fully logged in but has email in session
+        if (auth.user?._id) {
+            userId = auth.user._id.toString()
+        } else {
+            const user = await User.findOne(
+                { email: auth.user?.email },
+            ).select("_id")
+
+            if (!user) {
+                return createResponse(
+                    { success: false, message: "User not found" },
+                    StatusCode.NOT_FOUND
+                )
+            }
+
+            userId = user._id.toString()
+        }
 
         //validate the data
         if (!title) {
@@ -37,16 +57,15 @@ export async function POST(req: NextRequest) {
             )
         }
 
-        if (!coverImage) {
-            return createResponse(
-                { success: false, message: "Cover image is required" },
-                StatusCode.BAD_REQUEST
-            )
-        }
+        // if (!coverImage) {
+        //     return createResponse(
+        //         { success: false, message: "Cover image is required" },
+        //         StatusCode.BAD_REQUEST
+        //     )
+        // }
 
         const safeTags = Array.isArray(tags) ? tags : []
 
-        await dbConnect()
 
         const existingBlog = await Blog.findOne({
             title,
