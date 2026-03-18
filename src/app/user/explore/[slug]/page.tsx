@@ -5,6 +5,7 @@ import { Separator } from "@/components/ui/separator"
 import { Calendar, Clock, Share2, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getBlog } from "@/utils/get-blog";
+import { parseEditorContent } from "@/utils/editorjsRenderer";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -19,6 +20,9 @@ const BlogPage = async ({ params }: PageProps) => {
     if (!blog || Object.keys(blog).length === 0) {
         notFound();
     }
+
+    const htmlContent = parseEditorContent(blog.content);
+
 
     return (
         <article className="min-h-screen bg-background">
@@ -89,8 +93,25 @@ const BlogPage = async ({ params }: PageProps) => {
                         </p>
 
                         {/* Dynamic content would go here */}
-                        <div className="aspect-video rounded-lg bg-muted mb-8 overflow-hidden">
-                            {blog.content || "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."}
+                        <div className="mb-12">
+                            <div className="prose prose-neutral dark:prose-invert prose-lg md:prose-xl max-w-none
+    prose-headings:font-serif prose-headings:font-bold
+    prose-p:leading-relaxed prose-p:text-foreground/80
+    prose-img:rounded-xl prose-img:shadow-md
+    prose-li:marker:text-primary
+    prose-a:text-primary hover:prose-a:underline
+  ">
+                                {Array.isArray(htmlContent) ? (
+                                    htmlContent.map((block: string, index: number) => (
+                                        <div
+                                            key={index}
+                                            dangerouslySetInnerHTML={{ __html: block }}
+                                        />
+                                    ))
+                                ) : (
+                                    <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+                                )}
+                            </div>
                         </div>
                     </div>
 

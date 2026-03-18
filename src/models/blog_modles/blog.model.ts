@@ -1,16 +1,12 @@
+
+import { EditorJSData } from "@/types/blog";
 import { models, Schema, model } from "mongoose";
 
-export interface EditorBlock {
-  id: string
-  type: string
-  data: unknown
-}
 export interface EditorContent {
     time: number
-    blocks: EditorBlock[]
+    blocks: EditorJSData[]
     version: string
 }
-
 interface IBlog {
     id?: Schema.Types.ObjectId,
     author: Schema.Types.ObjectId
@@ -63,8 +59,8 @@ const blogSchema = new Schema<IBlog>({
     tags: [String],
 
     isPublished: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     },
 
     publishedAt: Date

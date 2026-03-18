@@ -41,7 +41,7 @@ export const getBlog = async (slug: string) => {
             author: userId,
             slug: slug
         })
-            .select("title slug excerpt coverImage tags isPublished createdAt author")
+            .select("title slug excerpt coverImage tags isPublished createdAt author content publishedAt")
             .populate("author", "username")
             .sort({ createdAt: -1 })
             .lean()
