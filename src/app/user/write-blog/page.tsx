@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { createBlog } from "@/utils/create-blog"
 import { OutputData } from "@editorjs/editorjs"
-import axios from "axios"
-import { ArrowLeft, MoreHorizontal, Eye } from "lucide-react" // Install lucide-react
+import { ArrowLeft } from "lucide-react" // Install lucide-react
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -34,6 +33,7 @@ const Page = () => {
                 toast.error(errorMessage)
             }
         } catch (error) {
+            console.error("Error publishing blog:", error)
             toast.error("Failed to publish blog")
         } finally {
             setLoading(false)
