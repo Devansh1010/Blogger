@@ -19,20 +19,6 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-black">
 
-      <header className="absolute top-6 left-0 right-0 flex items-center justify-center">
-
-        {/* Title */}
-        <h2 className="text-lg text-muted-foreground">
-          Dev Blog Platform
-        </h2>
-
-        {/* Theme Toggle */}
-        <div className="absolute right-6">
-          <ModeToggle />
-        </div>
-
-      </header>
-
       <main className="flex flex-1 flex-col items-center justify-center px-6 text-center">
 
         {/* Title */}

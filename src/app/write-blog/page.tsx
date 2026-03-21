@@ -1,6 +1,7 @@
 // page.tsx
 "use client"
 import Editor from "@/components/editor"
+import { ModeToggle } from "@/components/theme"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { createBlog } from "@/utils/create-blog"
@@ -58,6 +59,11 @@ const Page = () => {
                         <MoreHorizontal className="w-5 h-5" />
                     </Button>
                 </div> */}
+
+                {/* Theme Toggle */}
+                <div className="absolute right-6">
+                    <ModeToggle />
+                </div>
             </nav>
 
             {/* READING PROGRESS BAR */}
