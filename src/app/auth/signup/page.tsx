@@ -3,6 +3,7 @@
 import { SignupForm } from "@/components/signup-form"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { LayoutBottomIcon } from "@hugeicons/core-free-icons"
+import Image from "next/image"
 
 export default function SignupPage() {
   return (
@@ -13,7 +14,7 @@ export default function SignupPage() {
             <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <HugeiconsIcon icon={LayoutBottomIcon} strokeWidth={2} className="size-4" />
             </div>
-            Acme Inc.
+            Insights.
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -23,7 +24,7 @@ export default function SignupPage() {
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">
-        <img
+        <Image
           src="../public/next.svg"
           alt="next.svg"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"

@@ -37,15 +37,7 @@ export async function GET() {
             userId = user._id.toString()
         }
 
-        if (!userId) {
-            return createResponse(
-                { success: false, message: "User ID not found" },
-                StatusCode.NOT_FOUND
-            )
-        }
-
-
-        const blogs = await Blog.find()
+        const blogs = await Blog.find({ author: userId })
             .select("title slug excerpt coverImage tags isPublished createdAt author")
             .populate("author", "username")
             .sort({ createdAt: -1 })

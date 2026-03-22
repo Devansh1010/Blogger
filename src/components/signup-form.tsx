@@ -57,7 +57,7 @@ export function SignupForm() {
 
         <form id="form-rhf-signup" onSubmit={form.handleSubmit(onSubmit)} >
           <FieldGroup className="space-y-5">
-            <div className="space-y-1 text-center">
+            <div className="text-center">
               <h1 className="text-2xl font-semibold tracking-tight">
                 Create your account
               </h1>
@@ -149,7 +149,7 @@ export function SignupForm() {
                 Sign up with GitHub
               </Button>
               <FieldDescription className="px-6 text-center">
-                Already have an account? <Link href={'/user/auth/signin'}> Sign in </Link>
+                Already have an account? <Link href={'/auth/signin'}> Sign in </Link>
               </FieldDescription>
             </Field>
           </FieldGroup>

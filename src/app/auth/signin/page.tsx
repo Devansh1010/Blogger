@@ -10,7 +10,7 @@ export default function LoginPage() {
             <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <span className="size-4">📊</span>
             </div>
-            Acme Inc.
+            Insights.
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">

@@ -3,12 +3,16 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Search, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "./theme"
+import { useSession } from "next-auth/react"
 
 export function Navbar() {
+
+    const { data: session } = useSession()
+
     const [isOpen, setIsOpen] = React.useState(false)
     const pathname = usePathname()
 
@@ -23,8 +27,8 @@ export function Navbar() {
 
     const navLinks = [
         { name: "Explore", href: "/user/explore" },
-        { name: "Journal", href: "/user/journal" },
-        { name: "Archive", href: "/user/archive" },
+        { name: "My Blogs", href: "/user/my-blogs" },
+        { name: "Profile", href: "/user/profile" },
     ]
 
     return (
@@ -38,9 +42,6 @@ export function Navbar() {
 
                 {/* LOGO SECTION */}
                 <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold italic">
-                        D
-                    </div>
                     <span className="font-serif font-bold text-xl tracking-tighter group-hover:opacity-70 transition-opacity">
                         Insights<span className="text-primary">.</span>
                     </span>
@@ -63,19 +64,26 @@ export function Navbar() {
 
                     <div className="h-4 w-px bg-border mx-2" />
 
-                    {/* SEARCH TRIGGER (CMD+K Style) */}
-                    <Button variant="ghost" size="icon" className="rounded-full">
-                        <Search className="w-4 h-4 text-muted-foreground" />
-                    </Button>
 
-                    <Link href="/write-blog">
-                        <Button size="sm" className="rounded-full px-5 font-bold text-xs uppercase tracking-widest">
-                            Write
-                        </Button>
-                    </Link>
+                    {
+                        session?.user ? (
+                            <Link href="/write-blog">
+                                <Button variant="outline" size="sm">
+                                    Write a Story
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Link href="/auth/signin">
+                                <Button size="sm" className="rounded-full px-5 font-bold text-xs uppercase tracking-widest">
+                                    Sign In
+                                </Button>
+                            </Link>
+                        )
+                    }
+
 
                     {/* Theme Toggle */}
-                    <div className="absolute right-6">
+                    <div className="">
                         <ModeToggle />
                     </div>
                 </div>
@@ -89,23 +97,25 @@ export function Navbar() {
             </div>
 
             {/* MOBILE MENU OVERLAY */}
-            {isOpen && (
-                <div className="absolute top-full left-0 w-full bg-background border-b animate-in slide-in-from-top-2 duration-300 md:hidden">
-                    <div className="flex flex-col p-6 gap-4">
-                        {navLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                onClick={() => setIsOpen(false)}
-                                className="text-lg font-serif font-bold"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
-                        <Button className="w-full mt-4 rounded-xl">Write a Story</Button>
+            {
+                isOpen && (
+                    <div className="absolute top-full left-0 w-full bg-background border-b animate-in slide-in-from-top-2 duration-300 md:hidden">
+                        <div className="flex flex-col p-6 gap-4">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={() => setIsOpen(false)}
+                                    className="text-lg font-serif font-bold"
+                                >
+                                    {link.name}
+                                </Link>
+                            ))}
+                            <Button className="w-full mt-4 rounded-xl">Write a Story</Button>
+                        </div>
                     </div>
-                </div>
-            )}
-        </nav>
+                )
+            }
+        </nav >
     )
 }
