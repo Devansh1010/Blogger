@@ -17,6 +17,7 @@ export default function NewPasswordPage() {
     const searchParams = useSearchParams()
     const token = searchParams.get('token')
 
+
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const form = useForm<z.infer<typeof passwordSchema>>({
@@ -34,10 +35,11 @@ export default function NewPasswordPage() {
 
             if (result) {
                 toast.success("Password reset successful! Please log in with your new password.")
-                router.push('/auth/login')
+                router.push('/auth/signin')
             }
         } catch (error) {
-            toast.error("Failed to reset password. Please try again.")
+            console.log(error)
+            toast.error(error instanceof Error ? error.message : "An unknown error occurred while resetting your password.")
         } finally { setIsSubmitting(false) }
     }
 

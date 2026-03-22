@@ -11,7 +11,7 @@ import {  Loader2, Mail, ShieldCheck } from 'lucide-react'
 import { emailOnlySchema } from '@/lib/schemas/auth/signUpSchema'
 import { forgotPassword } from '@/utils/forgot-password'
 
-export default function NewPasswordPage() {
+export default function ForgotPassword() {
 
     const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -23,6 +23,7 @@ export default function NewPasswordPage() {
     })
 
     async function onSubmit(data: z.infer<typeof emailOnlySchema>) {
+
         setIsSubmitting(true)
         try {
             const result = await forgotPassword(data.email)
@@ -79,8 +80,8 @@ export default function NewPasswordPage() {
                                         <Input
                                             {...field}
                                             id="form-reset-form-password"
-                                            type="password"
-                                            placeholder="••••••••"
+                                            type="email"
+                                            placeholder="Enter your Email"
                                             className={`h-12 pl-11 rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800 focus:ring-4 focus:ring-primary/5 transition-all ${fieldState.invalid ? "border-destructive focus:ring-destructive/5" : ""
                                                 }`}
                                         />

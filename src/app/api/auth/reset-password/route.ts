@@ -9,17 +9,19 @@ export async function POST(req: NextRequest) {
     try {
         const { searchParams } = new URL(req.url);
         const token = searchParams.get('token');
-        const { newPassword } = await req.json();
+        const { password } = await req.json();
+
+        console.log(password, token)
 
         // 1. Validation: Check for missing fields
-        if (!token || !newPassword) {
+        if (!token || !password) {
             return createResponse(
                 { success: false, message: "Missing token or password" },
                 StatusCode.BAD_REQUEST
             );
         }
 
-        if (newPassword.length < 8) {
+        if (password.length < 8) {
             return createResponse(
                 { success: false, message: "Password must be at least 8 characters" },
                 StatusCode.BAD_REQUEST
@@ -39,7 +41,7 @@ export async function POST(req: NextRequest) {
         await dbConnect();
 
         // 3. Security: Hash the new password before saving
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // 4. Update Admin by Email (found in Valkey)
         const updatedUserPassword = await User.findOneAndUpdate(
