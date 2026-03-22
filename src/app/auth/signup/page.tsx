@@ -28,6 +28,8 @@ export default function SignupPage() {
           src="../public/next.svg"
           alt="next.svg"
           className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          height={500}
+          width={500}
         />
       </div>
     </div>

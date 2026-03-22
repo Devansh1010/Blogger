@@ -54,7 +54,7 @@ export function SignupForm() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full min-w-md rounded-xl bg-background p-6 shadow-sm">
-
+        
         <form id="form-rhf-signup" onSubmit={form.handleSubmit(onSubmit)} >
           <FieldGroup className="space-y-5">
             <div className="text-center">
