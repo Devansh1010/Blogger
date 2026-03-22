@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
         await dbConnect();
         const isUserExist = await User.findOne({ email });
 
-        console.log(isUserExist)
         // 3. Security: Prevent email enumeration
 
         if (!isUserExist) {
