@@ -10,17 +10,33 @@ export async function GET(req: NextRequest) {
     const auth = await VerifyUser()
 
     if (!auth.success) {
-      return auth.response
+      return createResponse(
+        { success: false, message: "Unauthorized" },
+        StatusCode.UNAUTHORIZED
+      )
     }
-
-    const data = auth.user
-    if (!data) {
-      return createResponse({ success: false, message: 'Unauthorized' }, StatusCode.UNAUTHORIZED)
-    }
-
-    const userId = data.id
 
     await dbConnect()
+
+    let userId = null
+    //User can be either from session or from database based on email, this is to handle the case when user is not fully logged in but has email in session
+    if (auth.user?._id) {
+      userId = auth.user._id.toString()
+    } else {
+      
+      const user = await User.findOne(
+        { email: auth.user?.email },
+      ).select("_id")
+
+      if (!user) {
+        return createResponse(
+          { success: false, message: "User not found" },
+          StatusCode.NOT_FOUND
+        )
+      }
+
+      userId = user._id.toString()
+    }
 
     //try to fetch from catchMemory
     const cachedUser = await valkey.get(`user_profile_${userId}`)
@@ -37,8 +53,6 @@ export async function GET(req: NextRequest) {
     }
 
     const userInfo = await User.findOne({ _id: userId }).select('-password')
-
-    console.log(userInfo)
 
     if (!userInfo)
       return createResponse(
