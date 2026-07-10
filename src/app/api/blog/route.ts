@@ -211,8 +211,6 @@ export async function GET(req: NextRequest) {
 
         const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
         const limit = Math.min(20, parseInt(searchParams.get("limit") || "10"));
-        const tag = searchParams.get("tag");
-        const q = searchParams.get("q");
 
         const skip = (page - 1) * limit;
 
@@ -221,23 +219,7 @@ export async function GET(req: NextRequest) {
         const filter: BlogFilter = {
             isPublished: true,
         };
-
-        // 2. Handle tags safely
-        if (tag && tag !== 'null' && tag !== 'undefined') {
-            filter.tags = { $in: [tag] };
-        }
-
-        // 3. Handle search query safely
-        if (q && q.trim() !== '' && q !== 'null' && q !== 'undefined') {
-            const escapedQuery = q.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-
-            filter.$or = [
-                { title: { $regex: escapedQuery, $options: "i" } },
-                { excerpt: { $regex: escapedQuery, $options: "i" } },
-                { hook: { $regex: escapedQuery, $options: "i" } }
-            ];
-        }
-
+        
         const blogs = await Blog.find(filter)
             .sort({ createdAt: -1 })
             .skip(skip)

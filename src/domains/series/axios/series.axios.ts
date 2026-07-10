@@ -11,3 +11,10 @@ export const getUserSeries = async () => {
 
     return res.data.data;
 }
+
+export const getSeries = async () => {
+
+        const res = await seriesApi.get(``);
+
+        return res.data.data;
+}

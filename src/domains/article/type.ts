@@ -13,3 +13,10 @@ export interface CreateBlogVariables {
     tags?: string[];
     seriesPartOf: string
 }
+
+export type GetArticleParams = {
+    page: number;
+    tag?: string | null;
+    q?: string | null;
+    limit: number
+}

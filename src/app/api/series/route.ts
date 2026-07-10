@@ -6,13 +6,6 @@ import { VerifyUser } from "@/lib/verifyUser/userVerification";
 import Series from "@/models/series_models/series.model";
 import { NextRequest } from "next/server";
 
-
-interface SeriesFilter {
-    isPublished: boolean;
-    tags?: string | { $in: string[] } | { $regex: string, $options: string };
-    $or?: Array<{ [key: string]: { $regex: string; $options: string } }>;
-}
-
 export async function POST(req: NextRequest) {
     try {
         const auth = await VerifyUser();
@@ -68,7 +61,7 @@ export async function POST(req: NextRequest) {
         );
 
     } catch (error) {
-
+        console.error(error)
         return createResponse(
             {
                 success: false,
@@ -79,67 +72,11 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
 
     try {
 
-        const { searchParams } = new URL(req.url);
-
-        const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
-        const limit = Math.min(20, parseInt(searchParams.get("limit") || "10"));
-        const tag = searchParams.get("tag");
-        const q = searchParams.get("q");
-
-        const skip = (page - 1) * limit;
-
         await dbConnect()
-
-        const filter: SeriesFilter = {
-            isPublished: true,
-        };
-
-        if (tag && tag !== 'null' && tag !== 'undefined') {
-            filter.tags = { $in: [tag] };
-        }
-
-        // 3. Handle search query safely
-        if (q && q.trim() !== '' && q !== 'null' && q !== 'undefined') {
-            const escapedQuery = q.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-
-            filter.$or = [
-                {
-                    title: {
-                        $regex: escapedQuery,
-                        $options: "i",
-                    },
-                },
-                {
-                    desc: {
-                        $regex: escapedQuery,
-                        $options: "i",
-                    },
-                },
-            ];
-        }
-
-        if (tag || q) {
-            const filteredSeries = await Series.find(filter)
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .lean();
-
-            if (filteredSeries) {
-                return createResponse(
-                    {
-                        success: true,
-                        message: "Found Series",
-                        data: filteredSeries
-                    },
-                    StatusCode.OK
-                )
-            }
-        }
 
         const topSeries = await Series.aggregate([
             { $match: { isPublished: true } },
@@ -168,6 +105,7 @@ export async function GET(req: NextRequest) {
             },
             // 4. Limit to top 3 and project only what you need
             { $limit: 3 },
+
             {
                 $project: {
                     title: 1,

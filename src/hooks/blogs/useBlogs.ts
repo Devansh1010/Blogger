@@ -1,5 +1,3 @@
-// hooks/useBlogs.ts
-
 import { getBlogs } from "@/services/blog.service";
 import { useQuery } from "@tanstack/react-query";
 

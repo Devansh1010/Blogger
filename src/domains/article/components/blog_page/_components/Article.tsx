@@ -19,9 +19,9 @@ import SaveButton from '@/domains/impact/components/SavedButton'
 const Article = ({ article }: { article: Blog }) => {
 
     const { userEvents, isLoadingEvents } = useImpact(article._id)
-    
+
     const htmlContent = GeneratHtml(article.content)
-    
+
     const eventExist = EventExist(userEvents)
 
     return (
@@ -56,9 +56,9 @@ const Article = ({ article }: { article: Blog }) => {
                 </article>
 
                 {/* Action Buttons */}
-                <div className="mt-20 pt-10 border-t border-border/60">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
+                <div className="mt-20 border-t border-border/60 pt-10">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex flex-wrap items-center gap-3">
                             <SaveButton
                                 articleId={article._id}
                                 authorId={article.author._id}

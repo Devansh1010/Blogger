@@ -2,10 +2,13 @@ import { createResponse, StatusCode } from "@/lib/createResponse";
 import { CreateImpactEvent, ImpactModel } from "../models/impact.model";
 import { Types } from "mongoose";
 import { rateLimit } from "../utils/rate_limit";
+import { dbConnect } from "@/lib/db";
 
 export async function createImpactEvent({ actorId, articleId, authorId, eventType, metadata }: CreateImpactEvent) {
 
   try {
+    await dbConnect()
+
     const eventAlreadyExist = await ImpactModel
       .findOne({
         actorId,
@@ -95,6 +98,9 @@ export async function createImpactEvent({ actorId, articleId, authorId, eventTyp
 export async function getAllUserEvents({ filter }: { filter: { articleId: Types.ObjectId, actorId: Types.ObjectId } }) {
 
   try {
+    
+    await dbConnect();
+
     const events = await ImpactModel
       .find(filter)
       .lean()
