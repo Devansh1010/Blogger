@@ -22,7 +22,7 @@ export function Searchbar({
     const shouldShowSuggestions = value.trim().length >= 2
 
     return (
-        <div className="relative w-full max-w-md">
+        <div className="relative w-full max-lg:">
             <Search
                 className="
             absolute

@@ -35,43 +35,32 @@ const ExplorePage = () => {
 
 
     return (
-        <div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
-
+        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
             {/* HEADER */}
             <section className="mb-20">
-
-                <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
 
                     {/* Left */}
-                    <div>
-                        <h2 className="text-2xl font-semibold tracking-tight">
+                    <div className="space-y-2">
+                        <h2 className="text-3xl font-bold tracking-tight">
                             {debouncedValue
                                 ? "Related Series"
                                 : "Trending Series"}
                         </h2>
+
+                        <p className="text-sm text-muted-foreground">
+                            {debouncedValue
+                                ? "Series related to your search."
+                                : "Discover curated learning paths from the community."}
+                        </p>
                     </div>
 
                     {/* Right */}
-                    <div className="flex flex-col items-end gap-3">
-
-                        <div className='flex items-center gap-3'>
-                            {/* Search */}
-                            <Searchbar
-                                value={search}
-                                setValue={setSearch}
-                            />
-
-                            {/* Filter */}
-                            {/* <FilterSearch
-                                tagSearch={tagSearch}
-                                setTagSearch={setTagSearch}
-                                isTagPending={isTagPending}
-                                filteredTags={filteredTags}
-
-                            /> */}
-                        </div>
-
-                        {/* <ActiveFilter tag={tag} /> */}
+                    <div className="w-full lg:w-96">
+                        <Searchbar
+                            value={search}
+                            setValue={setSearch}
+                        />
                     </div>
                 </div>
 
@@ -90,20 +79,21 @@ const ExplorePage = () => {
 
 
             {/* ARTICLES */}
-            <section className="space-y-10">
+            <section className="flex flex-col mt-24 border-t border-border/50 pt-16">
 
-                <div className="flex items-center justify-between pb-1">
+                <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
 
-                    <h2 className="text-xl font-semibold">
-                        {debouncedValue
-                            ? "Results"
-                            : "Latest Articles"}
-                    </h2>
+                    <div>
+                        <h2 className="text-3xl font-bold tracking-tight">
+                            {debouncedValue
+                                ? "Search Results"
+                                : "Latest Articles"}
+                        </h2>
 
-                    <span className="text-sm text-muted-foreground">
-                        {articles?.pagination?.total || 0} articles
-                    </span>
-
+                        <p className="mt-1 text-sm text-muted-foreground">
+                            {articles?.pagination?.total || 0} articles available
+                        </p>
+                    </div>
                 </div>
 
                 <div className="min-h-125">
@@ -129,11 +119,11 @@ const ExplorePage = () => {
                                 <RestArticles rest={articles.blogs} />
                             ) : (
                                 !articles?.featuredBlog && (
-                                    <EmptyState
-                                        message={
-                                            `No articles foundd for ${debouncedValue}`
-                                        }
-                                    />
+                                    <div className="flex min-h-125 items-center justify-center">
+                                        <EmptyState
+                                            message={`No articles found for "${debouncedValue}"`}
+                                        />
+                                    </div>
                                 )
                             )}
                         </>
