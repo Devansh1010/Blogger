@@ -5,7 +5,7 @@ import Header from '@/domains/article/components/blog_page/_components/Header'
 import { useArticle } from '@/domains/article/hooks/useArticle';
 
 import ArticlePageLoader from './_components/loader/ArticlePageLoader';
-import { ArticleListError } from './_components/error/ArticleListError';
+import { ArticleListError } from '@/domains/explore/components/error/ListArticleError';
 
 
 const ArticlePage = ({ slug }: { slug: string }) => {

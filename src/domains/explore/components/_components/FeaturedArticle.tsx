@@ -3,17 +3,28 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import Image from "next/image"
 import Link from "next/link"
 import { Clock, Eye } from "lucide-react";
-import { Blog } from "@/types/frontend/blog";
 import { LevelBadge, TagBadge } from "@/components/features/badges/MetaBedge";
+import { useExploreArticles } from "@/domains/article/hooks/useExploreArticles";
+import { ArticleListError } from "../error/ListArticleError";
+import { formatDate } from "../../utils/dateFormate";
+import { FeaturedArticleSkeleton } from "../loader/FeaturedArticleSkeleton";
 
-const FeaturedArticle = ({ featured }: { featured: Blog }) => {
+const FeaturedArticle = ({ page }: { page: number }) => {
 
-    const formattedDate = featured?.publishedAt
-        ? new Date(featured.publishedAt).toLocaleDateString("en-US", {
-            month: "long",
-            year: "numeric",
-        })
-        : "Recently";
+    const {
+        articles,
+        isPending,
+        isError,
+        refetch
+    } = useExploreArticles({ page });
+
+    if (isPending) return <FeaturedArticleSkeleton />
+
+    if (isError) return <ArticleListError reset={refetch} />
+
+    const formattedDate = formatDate(articles?.featuredBlog?.publishedAt)
+
+    const featured = articles?.featuredBlog;
 
     return (
 
@@ -62,7 +73,7 @@ const FeaturedArticle = ({ featured }: { featured: Blog }) => {
                                     <span className="flex items-center gap-1.5"><Eye className="w-3 h-3" /> {featured.views}</span>
                                 </div>
                                 <div className="flex gap-2">
-                                    {featured?.tags?.slice(0, 2).map((tag) => (
+                                    {featured?.tags?.slice(0, 2).map((tag: string) => (
                                         <TagBadge key={tag}>
                                             {tag}
                                         </TagBadge>
@@ -75,8 +86,8 @@ const FeaturedArticle = ({ featured }: { featured: Blog }) => {
                         <div className="mt-auto pt-8 flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden relative">
-                                    
-                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold">{featured.username.slice(0,2)}</div>
+
+                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold">{featured.username.slice(0, 2)}</div>
 
                                 </div>
                                 <p className="text-xs font-bold uppercase tracking-tight text-zinc-500">

@@ -9,16 +9,31 @@ import { Clock, Eye, ArrowUpRight } from "lucide-react";
 import { Blog } from '@/types/frontend/blog';
 import { LevelBadge } from '@/components/features/badges/MetaBedge';
 import { formatDate } from '../../utils/dateFormate';
+import { useExploreArticles } from '@/domains/article/hooks/useExploreArticles';
+import { BlogsGridSkeleton } from '../loader/ArticleGridSkeleton';
+import { ArticleListError } from '../error/ListArticleError';
 
 
 
-const RestArticles = ({ rest }: { rest: Blog[] }) => {
+const RestArticles = ({ page }: { page: number }) => {
 
     const [expandedId, setExpandedId] = useState<string | null>(null);
+
+    const {
+        articles,
+        isPending,
+        isError,
+        refetch
+    } = useExploreArticles({ page });
+
+    if (isPending) return <BlogsGridSkeleton />
+
+    if(isError) return <ArticleListError reset={refetch} />
+
     return (
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 xl:gap-12">
-            {rest?.map((post: Blog) => {
+            {articles.blogs?.map((post: Blog) => {
                 const isExpanded = expandedId === post._id;
 
                 return (
@@ -39,6 +54,7 @@ const RestArticles = ({ rest }: { rest: Blog[] }) => {
                                             src={post.coverImage}
                                             alt={post.title}
                                             fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                                         />
                                         {/* Floating Level Badge */}

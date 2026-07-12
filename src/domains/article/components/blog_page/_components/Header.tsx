@@ -2,8 +2,9 @@ import { TagBadge } from '@/components/features/badges/MetaBedge'
 import { useArticle } from '@/domains/article/hooks/useArticle'
 import { Calendar, Clock } from 'lucide-react'
 import Image from 'next/image'
-import { ArticleListError } from './error/ArticleListError'
+
 import Header_loader from './loader/Header.loader'
+import { ArticleListError } from '@/domains/explore/components/error/ListArticleError'
 
 
 const Header = ({ articleSlug }: { articleSlug: string }) => {

@@ -5,7 +5,6 @@ import { Searchbar } from './_components/Searchbar';
 import { SeriesSkeleton } from './loader/SeriesSkeleton';
 import { ArticleListError } from './error/ListArticleError';
 import TopSeries from './_components/TopSeries';
-import { BlogsGridSkeleton } from './loader/ArticleGridSkeleton';
 import FeaturedArticle from './_components/FeaturedArticle';
 import { PaginationUI } from '@/components/features/series/components/PaginationUi';
 import RestArticles from './_components/RestArticles';
@@ -107,39 +106,30 @@ const ExplorePage = () => {
                 </div>
 
                 <div className="min-h-125">
-                    {isPending ? (
-                        <BlogsGridSkeleton />
-                    ) : isError ? (
-                        <ArticleListError reset={refetch} />
-                    ) : (
-                        <>
-                            {/* Featured Blog */}
-                            {isInitialPage &&
-                                articles?.featuredBlog && (
-                                    <div className="mb-20">
-                                        <FeaturedArticle
-                                            featured={articles.featuredBlog}
-                                        />
-                                    </div>
-                                )
-                            }
 
-                            <div className="mb-8 mt-16 flex items-center gap-2">
-                                <BookOpen className="h-5 w-5 text-primary" />
-
-                                <h3 className="text-xl font-semibold">
-                                    Continue Reading
-                                </h3>
+                    {/* Featured Blog */}
+                    {isInitialPage &&
+                            <div className="mb-20">
+                                <FeaturedArticle
+                                    page={page}
+                                />
                             </div>
+                    }
 
-                            {/* Rest Blogs */}
-                            {
-                                articles.blogs.length > 0 &&
+                    <div className="mb-8 mt-16 flex items-center gap-2">
+                        <BookOpen className="h-5 w-5 text-primary" />
 
-                                <RestArticles rest={articles.blogs} />
-                            }
-                        </>
-                    )}
+                        <h3 className="text-xl font-semibold">
+                            Continue Reading
+                        </h3>
+                    </div>
+
+                    {/* Rest Blogs */}
+                    {
+                        articles?.blogs?.length > 0 &&
+
+                        <RestArticles page={page} />
+                    }
 
                 </div>
 
