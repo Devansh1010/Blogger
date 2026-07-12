@@ -39,7 +39,7 @@ export function Searchbar({
 
             <Input
                 value={value}
-                placeholder="Search..."
+                placeholder="Search Articles and Series..."
                 onChange={(e) => setValue(e.target.value)}
                 className="
             h-11

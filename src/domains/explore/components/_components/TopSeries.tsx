@@ -10,7 +10,7 @@ const TopSeries = ({ isInitialPage, featuredSeries }: { isInitialPage: boolean; 
     if (!isInitialPage || !featuredSeries?.length) return null;
 
     return (
-        <section className="py-12 px-4 md:px-16 overflow-hidden">
+        <section className="py-8 px-4 md:px-16 overflow-hidden">
 
             <div className="relative max-w-6xl mx-auto group">
                 <Carousel

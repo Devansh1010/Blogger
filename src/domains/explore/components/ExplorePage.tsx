@@ -1,6 +1,5 @@
 import { useExploreArticles } from '@/domains/article/hooks/useExploreArticles';
 import { useState } from 'react'
-import { useDebounceSearch } from '../hooks/useDebounceSearch';
 import { useSeries } from '@/domains/series/hooks/useSeries';
 import { Searchbar } from './_components/Searchbar';
 import { SeriesSkeleton } from './loader/SeriesSkeleton';
@@ -9,16 +8,14 @@ import TopSeries from './_components/TopSeries';
 import { BlogsGridSkeleton } from './loader/ArticleGridSkeleton';
 import FeaturedArticle from './_components/FeaturedArticle';
 import { PaginationUI } from '@/components/features/series/components/PaginationUi';
-import { EmptyState } from './_components/EmptyState';
 import RestArticles from './_components/RestArticles';
+import { BookOpen, ChevronDown, } from 'lucide-react';
 
 
 const ExplorePage = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
     const isInitialPage = page === 1;
-
-    const { debouncedValue } = useDebounceSearch({ value: search })
 
     const {
         articles,
@@ -35,33 +32,46 @@ const ExplorePage = () => {
 
 
     return (
-        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-14">
+        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-10">
             {/* HEADER */}
-            <section className="mb-20">
-                <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
 
-                    {/* Left */}
-                    <div className="space-y-2">
-                        <h2 className="text-3xl font-bold tracking-tight">
-                            {debouncedValue
-                                ? "Related Series"
-                                : "Trending Series"}
-                        </h2>
+            <section className="flex min-h-[85vh] flex-col items-center justify-center ">
+                <div className="mb-16 flex justify-center">
+                    <div className="w-full max-w-xl text-center space-y-3">
+                        <h1 className="text-3xl font-bold">
+                            What do you want to learn today?
+                        </h1>
 
-                        <p className="text-sm text-muted-foreground">
-                            {debouncedValue
-                                ? "Series related to your search."
-                                : "Discover curated learning paths from the community."}
+                        <p className="mt-3 text-muted-foreground">
+                            Search thousands of developer insights,
+                            tutorials, and curated learning series.
                         </p>
-                    </div>
 
-                    {/* Right */}
-                    <div className="w-full lg:w-96">
                         <Searchbar
                             value={search}
                             setValue={setSearch}
                         />
                     </div>
+                </div>
+
+                <div className="mt-12 flex flex-col items-center gap-2 text-muted-foreground">
+                    <span className="text-sm">
+
+                        Discover trending learning paths
+                    </span>
+
+                    <ChevronDown className="h-5 w-5 animate-bounce" />
+                </div>
+            </section>
+
+            <section className="mx-auto mb-10 text-center">
+                <div className="">
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+                        Trending Series
+                    </h2>
+                    <p className="mt-3 text-base text-muted-foreground">
+                        Explore curated series that match your interests.
+                    </p>
                 </div>
 
                 {isSeriesPendding ? (
@@ -74,30 +84,29 @@ const ExplorePage = () => {
                         featuredSeries={series}
                     />
                 )}
-
             </section>
 
 
             {/* ARTICLES */}
-            <section className="flex flex-col mt-24 border-t border-border/50 pt-16">
+            <section className="mt-12 border-t border-border/50 pt-20">
 
-                <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-
+                <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight">
-                            {debouncedValue
-                                ? "Search Results"
-                                : "Latest Articles"}
+                        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+                            Latest Articles
                         </h2>
 
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            {articles?.pagination?.total || 0} articles available
+                        <p className="mt-2 text-muted-foreground">
+                            Fresh insights from the community.
                         </p>
                     </div>
+
+                    <span className="text-sm text-muted-foreground">
+                        {articles?.pagination?.total ?? 0} Articles
+                    </span>
                 </div>
 
                 <div className="min-h-125">
-
                     {isPending ? (
                         <BlogsGridSkeleton />
                     ) : isError ? (
@@ -112,20 +121,23 @@ const ExplorePage = () => {
                                             featured={articles.featuredBlog}
                                         />
                                     </div>
-                                )}
+                                )
+                            }
+
+                            <div className="mb-8 mt-16 flex items-center gap-2">
+                                <BookOpen className="h-5 w-5 text-primary" />
+
+                                <h3 className="text-xl font-semibold">
+                                    Continue Reading
+                                </h3>
+                            </div>
 
                             {/* Rest Blogs */}
-                            {articles.blogs.length > 0 ? (
+                            {
+                                articles.blogs.length > 0 &&
+
                                 <RestArticles rest={articles.blogs} />
-                            ) : (
-                                !articles?.featuredBlog && (
-                                    <div className="flex min-h-125 items-center justify-center">
-                                        <EmptyState
-                                            message={`No articles found for "${debouncedValue}"`}
-                                        />
-                                    </div>
-                                )
-                            )}
+                            }
                         </>
                     )}
 
