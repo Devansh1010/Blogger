@@ -20,7 +20,6 @@ const FeaturedArticle = ({ featured }: { featured: Blog }) => {
         <section className="group py-12 lg:py-16">
             <Link
                 href={`/user/explore/${featured?.slug}`}
-                prefetch={false}
             >
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 xl:gap-16 items-center">

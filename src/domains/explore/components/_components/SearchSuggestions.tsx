@@ -1,13 +1,13 @@
-import Link from "next/link";
+
 import {
-    Search,
-    // FileText,
-    // BookOpen,
-    // User,
-    ArrowUpRight,
+    Search,   
+    FileText,
+    BookOpen,
+    User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SearchSuggestionsProps, Suggestion } from "../../type";
+import { ArticleSuggestion, SearchSuggestionsProps, SeriesSuggestion, UserSuggestion } from "../../type";
+import { SuggestionItem } from "./SuggestionItemProps";
 
 
 export function SearchSuggestions({
@@ -19,6 +19,11 @@ export function SearchSuggestions({
 }: SearchSuggestionsProps) {
 
     if (!query.trim()) return null;
+
+    const hasSuggestions =
+        suggestions?.articles.length > 0 ||
+        suggestions?.series.length > 0 ||
+        suggestions?.users.length > 0;
 
 
     return (
@@ -60,7 +65,7 @@ export function SearchSuggestions({
 
                 {!isPending &&
                     !isError &&
-                    suggestions.length === 0 && (
+                    !hasSuggestions && (
                         <div className="py-10 text-center">
                             <Search className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
 
@@ -74,64 +79,66 @@ export function SearchSuggestions({
                         </div>
                     )}
 
-                {suggestions?.map((item: Suggestion) => (
-                    <Link
-                        key={item.slug}
-                        href={`/user/explore/${item.slug}`}
-                        onClick={onClose}
-                        className="
-                            group
-                            flex
-                            items-center
-                            justify-between
-                            gap-4
-                            border-b
-                            px-4
-                            py-3
-                            transition-colors
-                            last:border-none
-                            hover:bg-muted/60
-                        "
-                    >
-                        <div className="flex items-center gap-3">
+                <div className="max-h-96 overflow-y-auto">
 
-                            {/* <div className="rounded-lg bg-primary/10 p-2 text-primary">
-                                {item.type === "article" && (
-                                    <FileText className="h-4 w-4" />
-                                )}
+                    {/* Articles */}
+                    {suggestions?.articles?.length > 0 && (
+                        <>
+                            <p className="px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                                Articles
+                            </p>
 
-                                {item.type === "series" && (
-                                    <BookOpen className="h-4 w-4" />
-                                )}
+                            {suggestions.articles.map((item: ArticleSuggestion) => (
+                                <SuggestionItem
+                                    key={item.slug}
+                                    href={`/user/explore/${item.slug}`}
+                                    icon={<FileText className="h-4 w-4" />}
+                                    title={item.title}
+                                    onClose={onClose}
+                                />
+                            ))}
+                        </>
+                    )}
 
-                                {item.type === "author" && (
-                                    <User className="h-4 w-4" />
-                                )}
-                            </div> */}
+                    {/* Series */}
+                    {suggestions?.series?.length > 0 && (
+                        <>
+                            <p className="px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                                Series
+                            </p>
 
-                            <div className="min-w-0">
-                                <p className="truncate font-medium">
-                                    {item.title}
-                                </p>
+                            {suggestions.series.map((item: SeriesSuggestion) => (
+                                <SuggestionItem
+                                    key={item.slug}
+                                    href={`/user/series/${item.slug}`}
+                                    icon={<BookOpen className="h-4 w-4" />}
+                                    title={item.title}
+                                    onClose={onClose}
+                                />
+                            ))}
+                        </>
+                    )}
 
-                                <p className="truncate text-sm text-muted-foreground">
-                                    {item.description}
-                                </p>
-                            </div>
-                        </div>
+                    {/* Users */}
+                    {suggestions?.users?.length > 0 && (
+                        <>
+                            <p className="px-4 py-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                                People
+                            </p>
 
-                        <ArrowUpRight
-                            className="
-                                h-4
-                                w-4
-                                opacity-0
-                                transition-all
-                                group-hover:translate-x-1
-                                group-hover:opacity-100
-                            "
-                        />
-                    </Link>
-                ))}
+                            {/* {suggestions.users.map((item: UserSuggestion) => (
+                                <SuggestionItem
+                                    key={item.username}
+                                    href={`/user/${item.username}`}
+                                    icon={<User className="h-4 w-4" />}
+                                    title={`@${item.username}`}
+                                    onClose={onClose}
+                                />
+                            ))} */}
+                        </>
+                    )}
+
+                </div>
             </div>
         </div>
     );

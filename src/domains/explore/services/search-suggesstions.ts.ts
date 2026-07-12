@@ -5,7 +5,7 @@ function escapeRegex(text: string) {
     return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export async function getSearchSuggesstions({ q }: { q: string | null }) {
+export async function getSearchSuggesstions({ q, ip }: { q: string | null, ip: string }) {
 
     if (!q || q.trim().length < 2) {
         return createResponse({
@@ -17,5 +17,5 @@ export async function getSearchSuggesstions({ q }: { q: string | null }) {
 
     const safeQuery = escapeRegex(q)
 
-    return await getSuggesstions({ q: safeQuery })
+    return await getSuggesstions({ q: safeQuery, ip })
 }

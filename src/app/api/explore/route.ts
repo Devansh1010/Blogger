@@ -8,5 +8,9 @@ export async function GET(req: NextRequest) {
 
     const q = searchParams.get("query");
 
-    return await getSearchSuggesstions({q})
+    const ip =
+        req.headers.get("x-forwarded-for")?.split(",")[0] ??
+        "unknown";
+
+    return await getSearchSuggesstions({ q, ip })
 }

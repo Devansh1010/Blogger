@@ -16,8 +16,9 @@ export function Searchbar({
     const {
         suggestions,
         isPending,
-        isError
+        isError,
     } = useSearchSuggestions({ query: debouncedValue })
+    
 
     const shouldShowSuggestions = value.trim().length >= 2
 

@@ -3,7 +3,7 @@ import { getSearchSuggestions } from "../axios/explore.axios"
 
 export const useSearchSuggestions = ({ query }: { query: string }) => {
 
-    const { data, isPending, isError } = useQuery({
+    const { data, isPending, isError, error } = useQuery({
         queryKey: ['suggestions', { query }],
         queryFn: () => getSearchSuggestions({ query }),
     })
@@ -11,6 +11,7 @@ export const useSearchSuggestions = ({ query }: { query: string }) => {
     return {
         suggestions: data,
         isPending,
-        isError
+        isError,
+        error
     }
 }
