@@ -3,7 +3,7 @@ import { CreateBlogVariables } from "@/services/blog.service";
 import axios from "axios"
 import { GetArticleParams } from "../type";
 
-const articleApi = axios.create({
+export const articleApi = axios.create({
     baseURL: "/api/blog",
     withCredentials: true
 })
@@ -41,7 +41,6 @@ export const createArticle = async (data: CreateBlogVariables) => {
 
     return res.data
 };
-
 
 export const updateArticle = async (data: CreateBlogVariables, slug?: string) => {
 

@@ -1,9 +1,6 @@
 import { createResponse, StatusCode } from "@/lib/createResponse";
 import { getSuggesstions } from "../repositories/search.repositories";
-
-function escapeRegex(text: string) {
-    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
+import { escapeRegex } from "../utils/escapeRegex";
 
 export async function getSearchSuggesstions({ q, ip }: { q: string | null, ip: string }) {
 
@@ -19,3 +16,4 @@ export async function getSearchSuggesstions({ q, ip }: { q: string | null, ip: s
 
     return await getSuggesstions({ q: safeQuery, ip })
 }
+

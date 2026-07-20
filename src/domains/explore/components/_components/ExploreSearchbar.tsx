@@ -1,12 +1,12 @@
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+
 import { ExploreSearchProps } from "../../type";
 import { useDebounceSearch } from "../../hooks/useDebounceSearch";
-import { useSearchSuggestions } from "../../hooks/useSearchSuggestions";
 import { SearchSuggestions } from "./SearchSuggestions";
+import { Searchbar } from "@/components/Searchbar";
+import { useSearchSuggestions } from "../../hooks/useSearchSuggestions";
 
 
-export function Searchbar({
+export function ExploreSearchbar({
     value,
     setValue,
 }: ExploreSearchProps) {
@@ -18,37 +18,21 @@ export function Searchbar({
         isPending,
         isError,
     } = useSearchSuggestions({ query: debouncedValue })
-    
+
 
     const shouldShowSuggestions = value.trim().length >= 2
 
+    const hasSuggestions =
+        suggestions?.articles?.length > 0 ||
+        suggestions?.series?.length > 0 ||
+        suggestions?.users?.length > 0;
+
     return (
         <div className="relative w-full max-lg:">
-            <Search
-                className="
-            absolute
-            left-3
-            top-1/2
-            h-4
-            w-4
-            -translate-y-1/2
-            text-muted-foreground
-            pointer-events-none
-        "
-            />
-
-            <Input
+            <Searchbar
                 value={value}
-                placeholder="Search Articles and Series..."
-                onChange={(e) => setValue(e.target.value)}
-                className="
-            h-11
-            pl-10
-            pr-4
-            rounded-xl
-        "
+                setValue={setValue}
             />
-
             {
                 shouldShowSuggestions &&
                 <SearchSuggestions
@@ -56,6 +40,7 @@ export function Searchbar({
                     suggestions={suggestions}
                     isPending={isPending}
                     isError={isError}
+                    hasSuggestions={hasSuggestions}
                 />
             }
         </div>

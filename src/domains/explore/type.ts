@@ -37,5 +37,6 @@ export interface SearchSuggestionsProps {
     suggestions: SuggestionsResponse;
     isPending: boolean;
     isError: boolean;
+    hasSuggestions: boolean
     onClose?: () => void;
 }

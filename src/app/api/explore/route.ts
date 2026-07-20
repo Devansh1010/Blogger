@@ -1,5 +1,5 @@
-import { getSearchSuggesstions } from "@/domains/explore/services/search-suggesstions.ts";
 
+import { getSearchSuggesstions } from "@/domains/explore/services/search-suggesstions";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {

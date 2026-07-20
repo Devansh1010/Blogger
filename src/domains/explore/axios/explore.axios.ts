@@ -23,3 +23,10 @@ export const getSearchSuggestions = async ({ query }: { query: string }) => {
 
     return res.data.data
 }
+
+export const getUserSearchSuggestions = async ({ query }: { query: string }) => {
+
+    const res = await exploreApi.get(`?query=${query}`);
+
+    return res.data.data
+}

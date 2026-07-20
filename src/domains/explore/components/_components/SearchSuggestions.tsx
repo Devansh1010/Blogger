@@ -1,12 +1,11 @@
 
 import {
-    Search,   
+    Search,
     FileText,
     BookOpen,
-    User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ArticleSuggestion, SearchSuggestionsProps, SeriesSuggestion, UserSuggestion } from "../../type";
+import { ArticleSuggestion, SearchSuggestionsProps, SeriesSuggestion } from "../../type";
 import { SuggestionItem } from "./SuggestionItemProps";
 
 
@@ -15,16 +14,11 @@ export function SearchSuggestions({
     suggestions,
     isPending,
     isError,
+    hasSuggestions,
     onClose,
 }: SearchSuggestionsProps) {
 
     if (!query.trim()) return null;
-
-    const hasSuggestions =
-        suggestions?.articles.length > 0 ||
-        suggestions?.series.length > 0 ||
-        suggestions?.users.length > 0;
-
 
     return (
         <div

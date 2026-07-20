@@ -1,14 +1,14 @@
-import { useExploreArticles } from '@/domains/article/hooks/useExploreArticles';
-import { useState } from 'react'
-import { useSeries } from '@/domains/series/hooks/useSeries';
-import { Searchbar } from './_components/Searchbar';
-import { SeriesSkeleton } from './loader/SeriesSkeleton';
-import { ArticleListError } from './error/ListArticleError';
-import TopSeries from './_components/TopSeries';
-import FeaturedArticle from './_components/FeaturedArticle';
 import { PaginationUI } from '@/components/features/series/components/PaginationUi';
-import RestArticles from './_components/RestArticles';
+import { useExploreArticles } from '@/domains/article/hooks/useExploreArticles';
+import { useSeries } from '@/domains/series/hooks/useSeries';
 import { BookOpen, ChevronDown, } from 'lucide-react';
+import { useState } from 'react';
+import FeaturedArticle from './_components/FeaturedArticle';
+import RestArticles from './_components/RestArticles';
+import TopSeries from './_components/TopSeries';
+import { ArticleListError } from './error/ListArticleError';
+import { SeriesSkeleton } from './loader/SeriesSkeleton';
+import { ExploreSearchbar } from './_components/ExploreSearchbar';
 
 
 const ExplorePage = () => {
@@ -46,7 +46,7 @@ const ExplorePage = () => {
                             tutorials, and curated learning series.
                         </p>
 
-                        <Searchbar
+                        <ExploreSearchbar
                             value={search}
                             setValue={setSearch}
                         />
@@ -109,11 +109,11 @@ const ExplorePage = () => {
 
                     {/* Featured Blog */}
                     {isInitialPage &&
-                            <div className="mb-20">
-                                <FeaturedArticle
-                                    page={page}
-                                />
-                            </div>
+                        <div className="mb-20">
+                            <FeaturedArticle
+                                page={page}
+                            />
+                        </div>
                     }
 
                     <div className="mb-8 mt-16 flex items-center gap-2">

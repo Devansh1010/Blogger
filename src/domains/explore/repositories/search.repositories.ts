@@ -6,6 +6,7 @@ import Blog from "@/models/blog_modles/blog.model";
 import Series from "@/models/series_models/series.model";
 import User from "@/models/user_models/user.model";
 
+//Global search suggestions (explore page)
 export async function getSuggesstions({ q, ip }: { q: string, ip: string }) {
     try {
         const regex = new RegExp("^" + q, "i");
@@ -112,7 +113,7 @@ export async function getSuggesstions({ q, ip }: { q: string, ip: string }) {
     } catch (error) {
         console.log(error)
         return createResponse(
-            { success: false, message: "Internal Error Occured while getting Events" },
+            { success: false, message: "Internal Error Occured while getting Suggestions" },
             StatusCode.INTERNAL_ERROR
         );
     }
