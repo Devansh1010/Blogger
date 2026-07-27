@@ -5,6 +5,7 @@ export interface IUser {
   _id?: Schema.Types.ObjectId,
   username: string,
   email: string,
+  bio: string,
   provider: "credentials" | "github";
   password?: string;
   avatar?: string | null,
@@ -12,8 +13,11 @@ export interface IUser {
   resetTokenExpiry?: Date,
   isVerified: boolean,
   verifyCode?: string,
-  verifyExpiry?: Date
-  followers: Schema.Types.ObjectId[]
+  verifyExpiry?: Date,
+  followersCount: number
+  followingCount: number
+  featuredArticles: Schema.Types.ObjectId[],
+  featuredSeries: Schema.Types.ObjectId[],
 }
 
 const userSchema = new Schema<IUser>(
@@ -34,6 +38,11 @@ const userSchema = new Schema<IUser>(
       unique: true,
     },
 
+    bio: {
+      type: String,
+      lowercase: true,
+    },
+
     provider: {
       type: String,
       enum: ["credentials", "github"],
@@ -52,13 +61,6 @@ const userSchema = new Schema<IUser>(
       type: String,
       default: null,
     },
-
-    followers: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
 
     resetToken: {
       type: String,
@@ -85,6 +87,32 @@ const userSchema = new Schema<IUser>(
       type: Date,
       select: false,
     },
+
+    followersCount: {
+      type: Number,
+      default: 0
+    },
+
+    followingCount: {
+      type: Number,
+      default: 0
+    },
+
+
+    featuredArticles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Blog'
+      }
+    ],
+
+    featuredSeries: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Series'
+      }
+    ],
+
   },
   { timestamps: true }
 )

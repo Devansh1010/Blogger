@@ -1,53 +1,16 @@
-import { rateLimit } from "@/domains/impact/utils/rate_limit";
 import { createResponse, StatusCode } from "@/lib/createResponse";
-import { dbConnect } from "@/lib/db";
-import { VerifyUser } from "@/lib/verifyUser/userVerification";
 import Blog from "@/models/blog_modles/blog.model";
 import Series from "@/models/series_models/series.model";
 import User from "@/models/user_models/user.model";
 
 //Global search suggestions (explore page)
-export async function getSuggesstions({ q, ip }: { q: string, ip: string }) {
+export async function getSuggesstions({ q }: { q: RegExp }) {
     try {
-        const regex = new RegExp("^" + q, "i");
-
-        await dbConnect();
-
-        const auth = await VerifyUser();
-
-        //Rate limit
-        if (auth.user?._id) {
-            const global = await rateLimit(
-                `rate-impact:user:${auth.user._id}`,
-                30,
-                60
-            );
-
-            if (!global.allowed) {
-                return createResponse({
-                    success: false,
-                    message: 'Too many requests'
-                }, StatusCode.TOO_MANY_REQUESTS)
-            }
-        } else {
-            const global = await rateLimit(
-                `rate-impact:user:${ip}`,
-                30,
-                60
-            );
-
-            if (!global.allowed) {
-                return createResponse({
-                    success: false,
-                    message: 'Too many requests'
-                }, StatusCode.TOO_MANY_REQUESTS)
-            }
-        }
-
+        
         const [articles, series, users] = await Promise.all([
             Blog.find({
                 isPublished: true,
-                title: regex,
+                title: q,
             })
                 .select("title slug")
                 .limit(8)
@@ -55,14 +18,14 @@ export async function getSuggesstions({ q, ip }: { q: string, ip: string }) {
 
             Series.find({
                 isPublished: true,
-                title: regex,
+                title: q,
             })
                 .select("title slug")
                 .limit(3)
                 .lean(),
 
             User.find({
-                username: regex,
+                username: q,
             })
                 .select("username")
                 .limit(3)

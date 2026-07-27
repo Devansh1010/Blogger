@@ -2,10 +2,10 @@ import { createResponse, StatusCode } from "@/lib/createResponse";
 import { dbConnect } from "@/lib/db";
 import { VerifyUser } from "@/lib/verifyUser/userVerification";
 import Blog from "@/models/blog_modles/blog.model";
-import User from "@/models/user_models/user.model";
 import { NextRequest } from "next/server";
 
 export async function GET(req: NextRequest) {
+    
     try {
 
         const auth = await VerifyUser();
@@ -28,7 +28,6 @@ export async function GET(req: NextRequest) {
         const skip = (page - 1) * limit;
 
         const filter = {
-            // Only show blogs for the logged-in user
             author: userId,
             // Add search condition if search exists
             ...(search && {

@@ -6,7 +6,7 @@ export const userApi = axios.create({
     withCredentials: true
 })
 
-export const getUserArticles = async ({ page, limit,}: { page: number, limit: number }) => {
+export const getUserArticles = async ({ page, limit, }: { page: number, limit: number }) => {
 
     const response = await articleApi.get(`/get-user-blogs?page=${page}&limit=${limit}`);
 
@@ -24,4 +24,10 @@ export const getUserArticleSuggestions = async ({ search }: { search: string }) 
     const res = await userApi.get(`/get-user-search-suggestions?query=${search}`)
 
     return res.data
+}
+
+export const getMe = async (userId: string) => {
+    const res = await userApi.get(`/me?userId=${userId}`,)
+
+    return res.data.data
 }

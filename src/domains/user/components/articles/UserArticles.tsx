@@ -48,7 +48,6 @@ const UserArticles = () => {
             <main className="min-h-125">
                 <ListArticles
                     page={page}
-                    search={search}
                 />
             </main>
 

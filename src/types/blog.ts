@@ -20,12 +20,6 @@ export interface TiptapContent {
   content: TiptapNode[];
 }
 
-export interface TiptapContent {
-  type: "doc";
-  content: TiptapNode[];
-}
-
-
 export interface IBlog {
   id?: Schema.Types.ObjectId;
 

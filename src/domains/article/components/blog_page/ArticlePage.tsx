@@ -10,7 +10,12 @@ import { ArticleListError } from '@/domains/explore/components/error/ListArticle
 
 const ArticlePage = ({ slug }: { slug: string }) => {
 
-    const { article, isArticleFetching, isErrorOccured, refetchArticles } = useArticle(slug);
+    const {
+        article,
+        isArticleFetching,
+        isErrorOccured,
+        refetchArticles
+    } = useArticle(slug);
 
     if (isArticleFetching) { return <ArticlePageLoader /> };
 

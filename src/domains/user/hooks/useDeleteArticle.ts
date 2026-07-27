@@ -10,7 +10,7 @@ export const useDeleteArticle = () => {
         mutationFn: (slug: string) => deleteUserArticle(slug),
 
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["user-blogs"] });
+            queryClient.invalidateQueries({ queryKey: ["articles"] });
             toast.success("Article deleted successfully!");
         },
 

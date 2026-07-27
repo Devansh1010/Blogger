@@ -1,78 +1,29 @@
+
+import { getUserProfile } from '@/domains/user/services/profile.services'
 import { createResponse, StatusCode } from '@/lib/createResponse'
 import { dbConnect } from '@/lib/db'
-// import valkey from '@/lib/valkey'
 import { VerifyUser } from '@/lib/verifyUser/userVerification'
 import User from '@/models/user_models/user.model'
 import { NextRequest } from 'next/server'
 
-export async function GET() {
-  try {
+export async function GET(req: NextRequest) {
 
-    const auth = await VerifyUser();
+  const { searchParams } = new URL(req.url)
 
-    if (!auth.success || !auth.user?._id) {
-      return createResponse(
-        { success: false, message: "Unauthorized" },
-        StatusCode.UNAUTHORIZED
-      );
+  const userId = searchParams.get('userId')
+
+  const ip =
+    req.headers.get("x-forwarded-for")?.split(",")[0] ??
+    "unknown";
+
+    if(!userId) {
+      return createResponse({
+        success: false,
+        message: 'User id is required'
+      }, StatusCode.BAD_REQUEST)
     }
 
-    const userId = auth.user._id;
-
-    await dbConnect()
-
-    //try to fetch from catchMemory
-    // const cachedUser = await valkey.get(`user_profile_${userId}`)
-
-    // if (cachedUser) {
-    //   return createResponse(
-    //     {
-    //       success: true,
-    //       message: 'User found (cached)',
-    //       data: JSON.parse(cachedUser),
-    //     },
-    //     StatusCode.OK
-    //   )
-    // }
-
-    const userInfo = await User.findOne({ _id: userId })
-      .select('-password')
-      .lean()
-
-    if (!userInfo)
-      return createResponse(
-        {
-          success: false,
-          message: 'No User found',
-          data: {},
-        },
-        StatusCode.NOT_FOUND
-      )
-
-    // await valkey.setEx(`user_profile_${userId}`, 600, JSON.stringify(userInfo))
-
-    return createResponse(
-      {
-        success: true,
-        message: 'User found',
-        data: userInfo,
-      },
-      StatusCode.OK
-    )
-  } catch (error) {
-    console.error('Error Finding User:', error)
-    return createResponse(
-      {
-        success: false,
-        message: 'Error Finding User',
-        error: {
-          code: '500',
-          message: 'Internal Server Error',
-        },
-      },
-      StatusCode.INTERNAL_ERROR
-    )
-  }
+  return await getUserProfile({ userId, ip })
 }
 
 export async function PATCH(req: NextRequest) {

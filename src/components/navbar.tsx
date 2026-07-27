@@ -29,7 +29,7 @@ export function Navbar() {
         { name: "Explore", href: "/user/explore" },
         { name: "My Blogs", href: "/user/my-blogs" },
         { name: "My Series", href: "/user/series" },
-        { name: "Profile", href: "/user/profile" },
+        { name: "Profile", href: `/user/profile/${session?.user?._id}` },
     ]
 
     return (
