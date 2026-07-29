@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSeries } from "../axios/series.axios";
 
 export function useSeries() {
-    const {data, isPending, isError} =  useQuery({
+    const {data, isPending, isError, refetch} =  useQuery({
         queryKey: ["series"],
         queryFn: () =>
             getSeries(),
@@ -11,6 +11,7 @@ export function useSeries() {
     return {
         series: data,
         isSeriesPendding: isPending,
-        isSeriesError: isError
+        isSeriesError: isError,
+        refetch
     }
 }

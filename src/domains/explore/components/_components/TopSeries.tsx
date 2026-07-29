@@ -4,8 +4,21 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { Series } from '@/types/frontend/series';
+import { useSeries } from '@/domains/series/hooks/useSeries';
+import { SeriesSkeleton } from '../loader/SeriesSkeleton';
+import { ArticleListError } from '../error/ListArticleError';
 
-const TopSeries = ({ isInitialPage, featuredSeries }: { isInitialPage: boolean; featuredSeries: Series[] }) => {
+const TopSeries = ({ isInitialPage }: { isInitialPage: boolean }) => {
+
+    const {
+        series: featuredSeries,
+        isSeriesError,
+        isSeriesPendding,
+        refetch
+    } = useSeries()
+
+    if (isSeriesPendding) return <SeriesSkeleton />
+    if (isSeriesError) return <ArticleListError reset={refetch}/>
     if (!isInitialPage || !featuredSeries?.length) return null;
 
     return (
@@ -20,12 +33,12 @@ const TopSeries = ({ isInitialPage, featuredSeries }: { isInitialPage: boolean; 
                     className="w-full"
                 >
                     <CarouselContent>
-                        {featuredSeries.map((series) => (
+                        {featuredSeries.map((series: Series) => (
                             <CarouselItem key={series._id} className="basis-full">
                                 <div className="p-2 transition-all duration-500">
-                                    <Link 
-                                    href={`/user/series/${series.slug}`}
-                                    prefetch = {false}
+                                    <Link
+                                        href={`/user/series/${series.slug}`}
+                                        prefetch={false}
                                     >
                                         <Card className="relative h-112.5 md:h-125 overflow-hidden border-none bg-background rounded-[2.5rem] shadow-xl hover:shadow-2xl transition-all duration-500 p-0">
                                             <CardContent className="relative h-full overflow-hidden p-0">
@@ -59,8 +72,8 @@ const TopSeries = ({ isInitialPage, featuredSeries }: { isInitialPage: boolean; 
                                                             <div className="h-9 w-9 rounded-full border border-white/30 overflow-hidden relative">
 
                                                                 {series.author.avatar &&
-                                                                    <Image src={series.author.avatar} fill 
-                                                                     sizes="36px"alt="author" className="object-cover" />}
+                                                                    <Image src={series.author.avatar} fill
+                                                                        sizes="36px" alt="author" className="object-cover" />}
                                                             </div>
 
                                                             <span className="text-sm font-medium text-white/90">{series.author.username}</span>

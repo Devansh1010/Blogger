@@ -12,11 +12,11 @@ const   ArticleListPage = ({
     viewAllHref,
 }: ArticleListSectionProps) => {
     const displayedArticles = limit
-        ? articles.slice(0, limit)
+        ? articles?.slice(0, limit)
         : articles;
 
     return (
-        <section className="mx-auto mt-12 w-full max-w-7xl p-8">
+        <section className="mx-auto mt-12 w-full max-w-7xl">
             <div className="mb-6 flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold">

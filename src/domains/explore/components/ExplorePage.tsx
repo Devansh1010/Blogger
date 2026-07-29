@@ -1,13 +1,11 @@
 import { PaginationUI } from '@/components/features/series/components/PaginationUi';
 import { useExploreArticles } from '@/domains/article/hooks/useExploreArticles';
-import { useSeries } from '@/domains/series/hooks/useSeries';
 import { BookOpen, ChevronDown, } from 'lucide-react';
 import { useState } from 'react';
 import FeaturedArticle from './_components/FeaturedArticle';
 import RestArticles from './_components/RestArticles';
 import TopSeries from './_components/TopSeries';
-import { ArticleListError } from './error/ListArticleError';
-import { SeriesSkeleton } from './loader/SeriesSkeleton';
+
 import { ExploreSearchbar } from './_components/ExploreSearchbar';
 
 
@@ -20,14 +18,7 @@ const ExplorePage = () => {
         articles,
         isPending,
         isError,
-        refetch
     } = useExploreArticles({ page });
-
-    const {
-        series,
-        isSeriesError,
-        isSeriesPendding
-    } = useSeries()
 
 
     return (
@@ -73,16 +64,11 @@ const ExplorePage = () => {
                     </p>
                 </div>
 
-                {isSeriesPendding ? (
-                    <SeriesSkeleton />
-                ) : isSeriesError ? (
-                    <ArticleListError reset={refetch} />
-                ) : (
-                    <TopSeries
-                        isInitialPage={isInitialPage}
-                        featuredSeries={series}
-                    />
-                )}
+
+                <TopSeries
+                    isInitialPage={isInitialPage}
+                />
+
             </section>
 
 
@@ -125,11 +111,8 @@ const ExplorePage = () => {
                     </div>
 
                     {/* Rest Blogs */}
-                    {
-                        articles?.blogs?.length > 0 &&
 
-                        <RestArticles page={page} />
-                    }
+                    <RestArticles page={page} />
 
                 </div>
 

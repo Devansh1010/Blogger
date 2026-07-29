@@ -87,7 +87,7 @@ const FeaturedArticle = ({ page }: { page: number }) => {
                             <div className="flex items-center gap-2">
                                 <div className="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden relative">
 
-                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold">{featured.username.slice(0, 2)}</div>
+                                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold">{featured.author.username.slice(0, 2)}</div>
 
                                 </div>
                                 <p className="text-xs font-bold uppercase tracking-tight text-zinc-500">

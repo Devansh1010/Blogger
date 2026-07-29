@@ -13,13 +13,6 @@ import { TiptapContent, TiptapNode } from "@/types/blog";
 // import { TiptapContent, TiptapNode } from "@/types/blog";
 
 
-interface BlogFilter {
-    isPublished: boolean;
-    tags?: string | { $in: string[] } | { $regex: string, $options: string };
-    $or?: Array<{ [key: string]: { $regex: string; $options: string } }>;
-}
-
-
 const hasValidText = (nodes?: JSONContent[]): boolean => {
     if (!nodes) return false;
 
@@ -76,7 +69,7 @@ export async function POST(req: Request) {
 
         // ================= BODY =================
         const body = await req.json();
-        
+
         const {
             title,
             content,
@@ -216,18 +209,64 @@ export async function GET(req: NextRequest) {
 
         await dbConnect()
 
-        const filter: BlogFilter = {
-            isPublished: true,
-        };
-        
-        const blogs = await Blog.find(filter)
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit)
-            .select(
-                "username title slug excerpt coverImage tags publishedAt hook insights level readTime views likes"
-            )
-            .lean();
+
+        const blogs = await Blog.aggregate([
+            {
+                $match: {
+                    isPublished: true,
+                },
+            },
+
+            {
+                $sort: {
+                    publishedAt: -1,
+                },
+            },
+
+            {
+                $skip: skip,
+            },
+
+            {
+                $limit: limit,
+            },
+
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                },
+            },
+
+            {
+                $unwind: "$author",
+            },
+
+            {
+                $project: {
+                    slug: 1,
+                    title: 1,
+                    coverImage: 1,
+                    excerpt: 1,
+                    hook: 1,
+                    insights: 1,
+                    level: 1,
+                    tags: 1,
+                    views: 1,
+                    likes: 1,
+                    readTime: 1,
+                    publishedAt: 1,
+
+                    author: {
+                        _id: "$author._id",
+                        username: "$author.username",
+                        avatar: "$author.avatar",
+                    },
+                },
+            },
+        ]);
 
         const total = await Blog.countDocuments({ isPublished: true });
 
