@@ -1,24 +1,28 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { useGetUserProfile } from '@/domains/user/hooks/profile/useGetProfile'
-import React from 'react'
 import OverviewLoader from '../loader/OverviewLoader'
+import ProfileError from '../error/ProfileError'
+import EditProfile from '../EditProfile'
+import CoverImage from './CoverImage'
 
 const Overview = ({ userId }: { userId: string }) => {
     const {
         userData,
         isPending,
-        // isError
+        isError,
+        refetch
     } = useGetUserProfile(userId)
 
     if (isPending) return <OverviewLoader />
+    if (isError) return <ProfileError refetch={refetch} />
 
     return (
         <section className="relative">
             {/* Cover */}
-            <div className="relative h-56 overflow-hidden rounded-xl bg-linear-to-r from-slate-800 via-slate-700 to-slate-900">
-                {/* Later replace with user's cover image */}
-            </div>
+            <CoverImage
+                userId={userId}
+            />
 
             {/* Profile */}
             <div className="-mt-16 flex flex-col items-center">
@@ -44,7 +48,7 @@ const Overview = ({ userId }: { userId: string }) => {
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-8 text-sm">
                     <div>
                         <span className="font-semibold">
-                            {userData?.userProfile?.followers}
+                            {userData?.userProfile?.followers ?? 0}
                         </span>{" "}
                         Followers
                     </div>
@@ -64,13 +68,23 @@ const Overview = ({ userId }: { userId: string }) => {
                     </div>
 
                     <div className="text-muted-foreground">
-                        Joined July 2026
+                        <span className="font-semibold">
+                            {userData?.totalViews ?? 0}
+                        </span>{" "}
+                        Views
                     </div>
                 </div>
 
-                <Button className="mt-6">
-                    Follow
-                </Button>
+                <div className='flex gap-2'>
+                    <Button className="mt-6">
+                        Follow
+                    </Button>
+
+                    <EditProfile
+                        userId={userId}
+                    />
+                </div>
+
             </div>
         </section>
     )

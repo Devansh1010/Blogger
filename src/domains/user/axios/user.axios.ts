@@ -31,3 +31,11 @@ export const getMe = async (userId: string) => {
 
     return res.data.data
 }
+
+export const checkUsernameUnique = async (username: string) => {
+    const { data } = await axios.get(
+        `/api/auth/check-username-unique?username=${username}`
+    );
+
+    return data;
+};

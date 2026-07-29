@@ -55,6 +55,7 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
                     email: 1,
                     bio: 1,
                     avatar: 1,
+                    coverImage: 1,
                     followersCount: 1,
                     followingCount: 1,
                     featuredArticles: 1
@@ -62,13 +63,22 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
             }
         ])
 
-        const articleCount = await Blog.countDocuments({
+        const blogs = await Blog.find({
             author: userId
         })
+        .select('views')
+        .lean()
 
         const seriesCount = await Series.countDocuments({
             author: userId
         })
+
+        const articleCount = blogs?.length ? blogs.length : 0;
+
+        const totalViews = blogs.reduce(
+            (acc, blog) => acc += blog.views,
+            0
+        )
 
         if (!data || data.length === 0) {
             return createResponse({
@@ -81,7 +91,8 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
         const userProfile = {
             userProfile: data[0],
             articleCount: articleCount,
-            seriesCount: seriesCount
+            seriesCount: seriesCount,
+            totalViews: totalViews
         }
 
         return createResponse({

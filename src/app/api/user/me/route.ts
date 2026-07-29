@@ -16,17 +16,18 @@ export async function GET(req: NextRequest) {
     req.headers.get("x-forwarded-for")?.split(",")[0] ??
     "unknown";
 
-    if(!userId) {
-      return createResponse({
-        success: false,
-        message: 'User id is required'
-      }, StatusCode.BAD_REQUEST)
-    }
+  if (!userId) {
+    return createResponse({
+      success: false,
+      message: 'User id is required'
+    }, StatusCode.BAD_REQUEST)
+  }
 
   return await getUserProfile({ userId, ip })
 }
 
 export async function PATCH(req: NextRequest) {
+  
   try {
 
     const auth = await VerifyUser();
@@ -42,7 +43,7 @@ export async function PATCH(req: NextRequest) {
 
     await dbConnect()
 
-    const { email, username, profileImage } = await req.json()
+    const { email, username, profileImage, coverImage } = await req.json()
 
     //validate the data
 
@@ -50,6 +51,7 @@ export async function PATCH(req: NextRequest) {
       {
         email,
         username,
+        coverImage: coverImage.url,
         avatar: profileImage.url
       }
     )

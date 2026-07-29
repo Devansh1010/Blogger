@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getMe } from "../../axios/user.axios"
 
 export const useGetUserProfile = (userId: string) => {
-    const { data, isPending, isError } = useQuery({
+    const { data, isPending, isError, refetch } = useQuery({
         queryKey: ['user-profile'],
         queryFn: () => getMe(userId),
     })
@@ -12,6 +12,7 @@ export const useGetUserProfile = (userId: string) => {
     return {
         userData: data,
         isPending,
-        isError
+        isError,
+        refetch
     }
 }

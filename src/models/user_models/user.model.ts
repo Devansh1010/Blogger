@@ -8,7 +8,8 @@ export interface IUser {
   bio: string,
   provider: "credentials" | "github";
   password?: string;
-  avatar?: string | null,
+  avatar?: string ,
+  coverImage? : string,
   resetToken?: string,
   resetTokenExpiry?: Date,
   isVerified: boolean,
@@ -59,7 +60,12 @@ const userSchema = new Schema<IUser>(
 
     avatar: {
       type: String,
-      default: null,
+      default: '',
+    },
+
+    coverImage: {
+      type: String,
+      default: '',
     },
 
     resetToken: {
