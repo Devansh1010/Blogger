@@ -17,7 +17,7 @@ const SeriesListPage = ({
         : series;
 
     return (
-        <section className="mx-auto mt-12 w-full max-w-7xl p-8">
+        <section className="mx-auto mt-12 w-full max-w-7xl p-8 lg:p-0 md:p-0">
 
             <div className="mb-6 flex items-center justify-between">
 

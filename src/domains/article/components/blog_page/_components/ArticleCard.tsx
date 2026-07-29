@@ -115,12 +115,18 @@ const ArticleCard = ({ article, topRight }: ArticleCardProps) => {
 
                             <div className="flex items-center gap-1">
                                 <Eye className="h-4 w-4" />
-                                <span>{Number(article.views)}</span>
+                                <span>{
+                                    Number.isNaN(article.views) ?
+                                        Number(article.views) : 0
+                                }</span>
                             </div>
 
                             <div className="flex items-center gap-1">
                                 <Heart className="h-4 w-4" />
-                                <span>{Number(article.likes)}</span>
+                                <span>{
+                                Number.isNaN(article.likes) ?
+                                    Number(article.likes) : 0
+                                }</span>
                             </div>
 
                         </div>

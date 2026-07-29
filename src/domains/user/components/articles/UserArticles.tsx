@@ -3,10 +3,10 @@
 import { useState } from "react"
 import { PaginationUI } from "@/components/features/series/components/PaginationUi"
 import { useUserArticles } from "../../hooks/useUserArticles"
-import ListArticles from "./_components/ListArticles"
 import { UserArticleError } from "./error/UserArticleError"
 import { UserArticlesSkeleton } from "./loader/UserArticleSkeleton"
 import UserArticleSearch from "./_components/UserArticleSearch"
+import ArticleListPage from "@/domains/article/components/blog_page/ArticleListPage"
 
 const UserArticles = () => {
 
@@ -19,8 +19,6 @@ const UserArticles = () => {
         isError,
         refetch
     } = useUserArticles({ page })
-
-
 
     if (isPending) return <UserArticlesSkeleton />
     if (isError) return <UserArticleError onRetry={refetch} />
@@ -46,8 +44,9 @@ const UserArticles = () => {
             </header>
 
             <main className="min-h-125">
-                <ListArticles
-                    page={page}
+                <ArticleListPage
+                title="My Articles"
+                articles={userArticles.blogs}
                 />
             </main>
 

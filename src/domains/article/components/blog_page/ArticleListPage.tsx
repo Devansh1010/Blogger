@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import ArticleCard from "./_components/ArticleCard";
 
-const   ArticleListPage = ({
+const ArticleListPage = ({
     title,
     description,
     articles,
@@ -16,7 +16,7 @@ const   ArticleListPage = ({
         : articles;
 
     return (
-        <section className="mx-auto mt-12 w-full max-w-7xl">
+        <section className="mx-auto mt-12 w-full max-w-7xl p-8 lg:p-0 md:p-0">
             <div className="mb-6 flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold">

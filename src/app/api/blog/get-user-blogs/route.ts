@@ -42,8 +42,8 @@ export async function GET(req: NextRequest) {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
-            .select("title desc slug excerpt coverImage tags isPublished createdAt author readTime")
-            .populate("author", "username")
+            .select("title desc slug excerpt coverImage tags isPublished createdAt author readTime level views likes publishedAt")
+            .populate("author", "username avatar")
             .lean()
 
         const total = await Blog.countDocuments(filter);

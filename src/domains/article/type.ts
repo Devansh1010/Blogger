@@ -72,4 +72,5 @@ export interface ArticleListSectionProps {
     limit?: number;
     viewAllHref?: string;
     loading?: boolean;
+
 }
