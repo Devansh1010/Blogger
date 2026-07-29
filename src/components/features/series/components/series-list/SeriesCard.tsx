@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Eye, Layers, Pencil, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Series } from "@/types/frontend/series";
 import { useState } from "react";
 import SeriesForm from "../SeriesForm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -23,6 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { TagBadge } from "@/components/features/badges/MetaBedge";
+import { Series } from "@/domains/series/types";
 
 export const SeriesCard = ({ series }: { series: Series }) => {
   const [openEdit, setOpenEdit] = useState(false);

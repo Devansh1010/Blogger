@@ -80,9 +80,9 @@ const Overview = ({ userId }: { userId: string }) => {
                         Follow
                     </Button>
 
-                    <EditProfile
+                    {/* <EditProfile
                         userId={userId}
-                    />
+                    /> */}
                 </div>
 
             </div>

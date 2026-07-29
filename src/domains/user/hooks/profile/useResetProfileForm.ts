@@ -10,7 +10,6 @@ export const useResetProfileForm = (
 ) => {
     useEffect(() => {
         if (!data) return;
-        console.log(data)
 
         form.reset({
             username: data.username ?? "",

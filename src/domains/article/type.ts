@@ -64,3 +64,12 @@ export interface ArticleResponse {
         totalPages: number;
     };
 }
+
+export interface ArticleListSectionProps {
+    title: string;
+    description?: string;
+    articles: Article[];
+    limit?: number;
+    viewAllHref?: string;
+    loading?: boolean;
+}

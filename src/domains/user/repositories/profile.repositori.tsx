@@ -50,6 +50,37 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
             },
 
             {
+                $lookup: {
+                    from: "series",
+                    let: {
+                        ids: {
+                            $ifNull: ["$featuredSeries", []]
+                        }
+                    },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $in: ["$_id", "$$ids"]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                title: 1,
+                                hook: 1,
+                                slug: 1,
+                                coverImage: 1,
+                                tags: 1,
+                                publishedAt: 1
+                            }
+                        }
+                    ],
+                    as: "featuredSeries"
+                }
+            },
+
+            {
                 $project: {
                     username: 1,
                     email: 1,
@@ -58,7 +89,8 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
                     coverImage: 1,
                     followersCount: 1,
                     followingCount: 1,
-                    featuredArticles: 1
+                    featuredArticles: 1,
+                    featuredSeries: 1
                 }
             }
         ])
@@ -66,8 +98,8 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
         const blogs = await Blog.find({
             author: userId
         })
-        .select('views')
-        .lean()
+            .select('views')
+            .lean()
 
         const seriesCount = await Series.countDocuments({
             author: userId
