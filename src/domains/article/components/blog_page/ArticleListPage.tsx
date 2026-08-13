@@ -48,7 +48,7 @@ const ArticleListPage = ({
                 </Card>
             ) : (
                 
-                <div className="grid grid-cols-2 gap-6 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                     {displayedArticles.map((article) => (
                         <ArticleCard
                             key={article._id}
