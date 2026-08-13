@@ -43,12 +43,6 @@ export const getSeriesById = async ({ slug, page, limit, search }: { slug: strin
     }
 }
 
-export const getUserSeries = async () => {
-
-    const res = await axios.get('/api/user/get-user-series');
-
-    return res.data.data;
-}
 
 export const getTags = async () => {
 
@@ -81,21 +75,6 @@ export const createSeries = async (data: FormData) => {
         if (axios.isAxiosError(error)) {
             throw new Error(
                 error.response?.data?.message || "Failed to create series"
-            );
-        }
-
-        throw new Error("Something went wrong");
-    }
-}
-
-export const deleteSeries = async (slug: string) => {
-    try {
-        const res = await seriesApi.delete(`/${slug}`)
-        return res.data;
-    } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-            throw new Error(
-                error.response?.data?.message || "Failed to delete series"
             );
         }
 

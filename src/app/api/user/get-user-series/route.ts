@@ -1,91 +1,24 @@
-import { createResponse, StatusCode } from '@/lib/createResponse'
-import { dbConnect } from '@/lib/db';
-import { VerifyUser } from '@/lib/verifyUser/userVerification'
-import Series from '@/models/series_models/series.model';
-import mongoose from 'mongoose';
 
-export async function GET() {
-    try {
-        const auth = await VerifyUser();
+import { getUserSeries } from '@/domains/series/services/series.services';
+import { NextRequest } from 'next/server';
 
-        if (!auth.success || !auth.user?._id) {
-            return createResponse(
-                { success: false, message: "Unauthorized" },
-                StatusCode.UNAUTHORIZED
-            );
-        }
+export async function GET(req: NextRequest) {
 
-        const userId = auth.user._id;
+    const { searchParams } = new URL(req.url);
 
-        await dbConnect()
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
 
+    const page = Number(pageParam);
+    const limit = Number(limitParam);
 
-        const userSeries = await Series.aggregate([
-            { $match: { author: new mongoose.Types.ObjectId(userId) } },
+    const currentPage =
+        Number.isInteger(page) && page > 0 ? page : 1;
 
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'author',
-                    foreignField: '_id',
-                    as: 'author'
-                }
-            },
+    const currentLimit =
+        Number.isInteger(limit) && limit > 0 ? limit : 10;
 
-            { $unwind: { path: '$author' } },
+    const skip = (currentPage - 1) * currentLimit;
 
-            {
-                $project: {
-                    slug: 1,
-                    title: 1,
-                    desc: 1,
-                    coverImage: 1,
-                    tags: 1,
-                    views: 1,
-                    createdAt: 1,
-                    isPublished: 1,
-                    author: {
-                        _id: 1,
-                        username: 1,
-                        avatar: 1
-                    }
-                }
-            }
-
-        ])
-
-        if (!userSeries) {
-            return createResponse(
-                {
-                    success: false,
-                    message: "Didn't find any series",
-                },
-                StatusCode.OK
-            )
-
-        }
-
-        return createResponse(
-            {
-                success: true,
-                message: 'Find Some Series(s)',
-                data: userSeries || []
-            },
-            StatusCode.OK
-        )
-
-    } catch (error) {
-        console.error('Error Finding User Series:', error)
-        return createResponse(
-            {
-                success: false,
-                message: 'Error Finding User Series',
-                error: {
-                    code: '500',
-                    message: 'Internal Server Error',
-                },
-            },
-            StatusCode.INTERNAL_ERROR
-        )
-    }
+    return await getUserSeries({ skip, limit })
 }

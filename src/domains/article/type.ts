@@ -52,6 +52,7 @@ export interface Article {
     level: "Beginner" | "Intermediate" | "Advanced";
     publishedAt?: Date;
     isPublished?: boolean;
+    isFeatured?: boolean;
     createdAt?: Date;
 }
 
@@ -72,5 +73,5 @@ export interface ArticleListSectionProps {
     limit?: number;
     viewAllHref?: string;
     loading?: boolean;
-
+    topRight?: React.ReactNode;
 }

@@ -5,16 +5,14 @@ const seriesApi = axios.create({
     withCredentials: true
 })
 
-export const getUserSeries = async () => {
+export const getSeries = async () => {
 
-    const res = await axios.get('/api/user/get-user-series');
+    const res = await seriesApi.get(``);
 
     return res.data.data;
 }
 
-export const getSeries = async () => {
-
-        const res = await seriesApi.get(``);
-
-        return res.data.data;
+export const deleteSeries = async (slug: string) => {
+    const res = await seriesApi.delete(`/${slug}`)
+    return res.data;
 }

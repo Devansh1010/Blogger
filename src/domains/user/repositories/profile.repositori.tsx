@@ -3,9 +3,9 @@ import { dbConnect } from "@/lib/db"
 import Blog from "@/models/blog_modles/blog.model";
 import Series from "@/models/series_models/series.model";
 import User from "@/models/user_models/user.model";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
-export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
+export const fetchUserProfileData = async ({ userId, isOwner }: { userId: string, isOwner: boolean }) => {
     try {
         await dbConnect();
 
@@ -124,7 +124,8 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
             userProfile: data[0],
             articleCount: articleCount,
             seriesCount: seriesCount,
-            totalViews: totalViews
+            totalViews: totalViews,
+            isOwner: isOwner
         }
 
         return createResponse({
@@ -139,5 +140,232 @@ export const fetchUserProfileData = async ({ userId }: { userId: string }) => {
             success: false,
             message: "Internal  Error",
         }, StatusCode.NOT_FOUND)
+    }
+}
+
+export const setUserFeaturedArticle = async ({ articleId, userId }: { articleId: string, userId: string }) => {
+
+    try {
+        await dbConnect()
+
+        const user = await User.findById(userId)
+            .select("featuredArticles")
+            .lean();
+
+        if (!user) {
+            return createResponse({
+                success: false,
+                message: 'User not found'
+            }, StatusCode.BAD_REQUEST)
+        }
+
+        const isAuthor = await Blog.findById(articleId)
+            .select('author')
+            .lean()
+
+        if (isAuthor.author?.toString() !== userId.toString()) {
+            return createResponse({
+                success: false,
+                message: "Unauthorized"
+            }, StatusCode.UNAUTHORIZED)
+        }
+
+        const isExist = user.featuredArticles?.filter((article: Types.ObjectId) => article.toString() == articleId.toString())
+
+        if (isExist.length == 0) {
+
+            if (user.featuredArticles?.length >= 2) {
+
+                return createResponse({
+                    success: false,
+                    message: "You can feature only 2 articles."
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            const updated = await User.updateOne(
+                { _id: userId },
+                {
+                    $addToSet: {
+                        featuredArticles: articleId,
+                    },
+                }
+            );
+
+            const featured = await Blog.findByIdAndUpdate(
+                articleId,
+                {
+                    $set: {
+                        isFeatured: true,
+                    },
+                },
+                {
+                    new: true,
+                }
+            ).lean();
+
+            if (!updated || !featured) {
+                return createResponse({
+                    success: false,
+                    message: "Article not be Featured"
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            return createResponse({
+                success: true,
+                message: "Article is Featuring"
+            }, StatusCode.OK)
+
+        } else {
+
+            const updated = await User.updateOne(
+                { _id: userId },
+                {
+                    $pull: {
+                        featuredArticles: articleId,
+                    },
+                }
+            );
+
+            await Blog.findByIdAndUpdate(articleId,
+                { isFeatured: false }
+            )
+
+
+            if (!updated) {
+                return createResponse({
+                    success: false,
+                    message: "Article not be Unfeatured"
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            return createResponse({
+                success: true,
+                message: "Article is removed from featured now"
+            }, StatusCode.OK)
+        }
+
+    } catch (error) {
+        console.log(error)
+        return createResponse({
+            success: false,
+            message: "Internal Error Occured"
+        }, StatusCode.INTERNAL_ERROR)
+    }
+}
+
+export const setUserFeaturedSeries = async ({ seriesId, userId }: { seriesId: string, userId: string }) => {
+
+    try {
+        await dbConnect()
+
+        const user = await User.findById(userId)
+            .select("featuredSeries")
+            .lean();
+
+        if (!user) {
+
+            return createResponse({
+                success: false,
+                message: 'User not found'
+            }, StatusCode.BAD_REQUEST)
+        }
+
+        const isAuthor = await Series.findById(seriesId)
+            .select('author')
+            .lean()
+
+        if (!isAuthor) {
+            return createResponse({
+                success: false,
+                message: "Series not found"
+            }, StatusCode.BAD_REQUEST)
+        }
+
+        if (isAuthor.author?.toString() !== userId.toString()) {
+            return createResponse({
+                success: false,
+                message: "Unauthorized"
+            }, StatusCode.UNAUTHORIZED)
+        }
+
+        const isExist = user.featuredSeries?.filter((series: Types.ObjectId) => series.toString() == seriesId.toString())
+
+
+        if (isExist?.length == 0 || !isExist) {
+
+            if (user.featuredSeries?.length >= 2) {
+                return createResponse({
+                    success: false,
+                    message: "You can feature only 2 series."
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            const updated = await User.updateOne(
+                { _id: userId },
+                {
+                    $addToSet: {
+                        featuredSeries: seriesId,
+                    },
+                }
+            );
+
+            const featured = await Series.findByIdAndUpdate(
+                seriesId,
+                {
+                    $set: {
+                        isFeatured: true,
+                    },
+                },
+                {
+                    new: true,
+                }
+            ).lean();
+
+            if (!updated || !featured) {
+                return createResponse({
+                    success: false,
+                    message: "Series not be Featured"
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            return createResponse({
+                success: true,
+                message: "Series is Featuring"
+            }, StatusCode.OK)
+
+        } else {
+
+            const updated = await User.updateOne(
+                { _id: userId },
+                {
+                    $pull: {
+                        featuredSeries: seriesId,
+                    },
+                }
+            );
+
+            await Blog.findByIdAndUpdate(seriesId,
+                { isFeatured: false }
+            )
+
+            if (!updated) {
+                return createResponse({
+                    success: false,
+                    message: "Series not be Unfeatured"
+                }, StatusCode.BAD_REQUEST)
+            }
+
+            return createResponse({
+                success: true,
+                message: "Series is removed from featured now"
+            }, StatusCode.OK)
+        }
+
+    } catch (error) {
+        console.log(error)
+        return createResponse({
+            success: false,
+            message: "Internal Error Occured"
+        }, StatusCode.INTERNAL_ERROR)
     }
 }

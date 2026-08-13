@@ -14,6 +14,13 @@ export const getUserArticles = async ({ page, limit, }: { page: number, limit: n
 
 }
 
+export const getUserSeries = async ({ page = 1, limit = 10, }: { page: number, limit?: number }) => {
+
+    const res = await userApi.get(`/get-user-series?page=${page}&limit=${limit}`);
+
+    return res.data.data;
+}
+
 export const deleteUserArticle = async (slug: string) => {
     const res = await articleApi.delete(`/${slug}`)
 
@@ -39,3 +46,16 @@ export const checkUsernameUnique = async (username: string) => {
 
     return data;
 };
+
+export const setFeaturedArticle = async (articleId: string) => {
+    const res = await userApi.patch(`/featuredArticle?articleId=${articleId}`)
+
+    return res.data
+}
+
+export const setFeaturedSeries = async (seriesId: string) => {
+    
+    const res = await userApi.patch(`/featuredSeries?seriesId=${seriesId}`)
+
+    return res.data
+}

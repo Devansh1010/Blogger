@@ -1,24 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, Calendar, Users } from "lucide-react";
+import { Calendar, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Series } from "../types";
+import { SeriesCardProps } from "../types";
+import { formatDate } from "@/domains/explore/utils/dateFormate";
 
 
 
-interface SeriesCardProps {
-    series: Series;
-}
+const SeriesCard = ({ series, topRight }: SeriesCardProps) => {
 
-const SeriesCard = ({ series }: SeriesCardProps) => {
+    const formatedDate = formatDate(series.publishedAt)
+
     return (
         <Link
             href={`/series/${series.slug}`}
             className="group block"
         >
-            <Card className="overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <Card className="overflow-hidden p-0 mb-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
                 {/* Cover */}
                 <div className="relative aspect-video overflow-hidden bg-muted">
@@ -30,10 +30,17 @@ const SeriesCard = ({ series }: SeriesCardProps) => {
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
 
-                    <Badge className="absolute right-3 top-3">
-                        <BookOpen className="mr-1 h-3 w-3" />
-                        {series.blogs.length} Articles
-                    </Badge>
+                    {topRight && (
+                        <div
+                            className="absolute top-3 right-3 z-10"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }}
+                        >
+                            {topRight}
+                        </div>
+                    )}
 
                 </div>
 
@@ -64,21 +71,21 @@ const SeriesCard = ({ series }: SeriesCardProps) => {
 
                         <div className="flex items-center gap-5">
 
-                            <div className="flex items-center gap-1">
+                            {/* <div className="flex items-center gap-1">
                                 <BookOpen className="h-4 w-4" />
                                 {series.blogs.length}
-                            </div>
+                            </div> */}
 
                             <div className="flex items-center gap-1">
                                 <Users className="h-4 w-4" />
-                                1.2K
+                                {series.views}
                             </div>
 
                         </div>
 
                         <div className="flex items-center gap-1">
                             <Calendar className="h-4 w-4" />
-                            Jul 2026
+                            {formatedDate}
                         </div>
 
                     </div>

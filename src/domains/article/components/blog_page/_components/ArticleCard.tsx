@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock3, Eye, Heart } from "lucide-react";
+import { Clock3, Heart, Users } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,10 +25,10 @@ const ArticleCard = ({ article, topRight }: ArticleCardProps) => {
             href={`/user/explore/${article.slug}`}
             className="group block"
         >
-            <Card className="overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+            <Card className="overflow-hidden mb-5 p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
                 {/* Cover */}
-                <div className="relative aspect-video overflow-hidden bg-muted">
+                <div className="relative aspect-video overflow-hidden bg-muted min-h-50">
 
                     {article.coverImage ? (
                         <Image
@@ -65,31 +65,31 @@ const ArticleCard = ({ article, topRight }: ArticleCardProps) => {
                     </div>
                 </div>
 
-                <CardContent className="space-y-5 p-6">
+                <CardContent className="space-y-5 px-6 py-2">
 
                     {/* Author */}
                     <div className="flex items-center gap-3">
 
                         <Avatar className="h-9 w-9">
-                            <AvatarImage src={article.author.avatar} />
+                            <AvatarImage src={article.author?.avatar} />
                             <AvatarFallback>
-                                {article.author.username.charAt(0).toUpperCase()}
+                                {article.author?.username.charAt(0).toUpperCase()}
                             </AvatarFallback>
                         </Avatar>
 
                         <span className="text-sm font-medium text-muted-foreground">
-                            {article.author.username}
+                            {article.author?.username}
                         </span>
 
                     </div>
 
                     {/* Title */}
                     <div>
-                        <h3 className="line-clamp-2 text-xl font-bold tracking-tight transition-colors group-hover:text-primary">
+                        <h3 className="line-clamp-1 text-xl font-bold tracking-tight transition-colors group-hover:text-primary">
                             {article.title}
                         </h3>
 
-                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground">
+                        <p className="mt-3 line-clamp-2 text-sm leading-6 text-muted-foreground">
                             {article.hook}
                         </p>
                     </div>
@@ -114,7 +114,7 @@ const ArticleCard = ({ article, topRight }: ArticleCardProps) => {
                         <div className="flex items-center gap-5">
 
                             <div className="flex items-center gap-1">
-                                <Eye className="h-4 w-4" />
+                                <Users className="h-4 w-4" />
                                 <span>{
                                     Number.isNaN(article.views) ?
                                         Number(article.views) : 0

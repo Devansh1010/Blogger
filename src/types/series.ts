@@ -15,6 +15,7 @@ export interface ISeries {
     views?: number
 
     isPublished: boolean
+    isFeatured: boolean
     publishedAt?: Date | null
 
     createdAt: Date,

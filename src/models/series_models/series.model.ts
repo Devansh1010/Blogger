@@ -47,6 +47,11 @@ const seriesSchema = new Schema<ISeries>(
             type: Boolean,
             default: false,
         },
+
+        isFeatured: {
+            type: Boolean,
+            default: false,
+        },
         publishedAt: {
             type: Date,
         },

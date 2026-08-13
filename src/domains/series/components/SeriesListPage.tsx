@@ -1,9 +1,9 @@
-import React from 'react'
+
 import { SeriesListSectionProps } from '../types'
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
-import { SeriesCard } from '@/components/features/series/components/series-list/SeriesCard';
+import SeriesCard from './SeriesCard';
 
 const SeriesListPage = ({
     title,

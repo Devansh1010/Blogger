@@ -80,6 +80,11 @@ const blogSchema = new Schema<IBlog>({
     default: false
   },
 
+  isFeatured: {
+    type: Boolean,
+    default: false
+  },
+
   publishedAt: Date
 
 }, { timestamps: true })

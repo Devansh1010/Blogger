@@ -1,5 +1,5 @@
 export interface Series {
-    id?: string,
+    _id: string,
     author: { username: string, avatar: string },
 
     title: string,
@@ -13,7 +13,7 @@ export interface Series {
     views?: number
 
     isPublished: boolean
-    publishedAt?: Date | null
+    publishedAt?: Date
 
     createdAt: Date,
     updatedAt: Date,
@@ -25,4 +25,9 @@ export interface SeriesListSectionProps {
     series: Series[];
     limit?: number;
     viewAllHref?: string;
+}
+
+export interface SeriesCardProps {
+    series: Series;
+    topRight?: React.ReactNode;
 }

@@ -1,5 +1,5 @@
 import { VerifyUser } from "@/lib/verifyUser/userVerification"
-import { fetchUserProfileData } from "../repositories/profile.repositori";
+import { fetchUserProfileData, setUserFeaturedArticle, setUserFeaturedSeries } from "../repositories/profile.repositori";
 import { rateLimit } from "@/domains/impact/utils/rate_limit";
 import { createResponse, StatusCode } from "@/lib/createResponse";
 
@@ -36,6 +36,64 @@ export const getUserProfile = async ({ userId, ip }: { userId: string, ip: strin
         }
     }
 
-    return await fetchUserProfileData({ userId });
+    const isOwner: boolean = user?._id?.toString() == userId.toString()
+
+    return await fetchUserProfileData({ userId, isOwner });
+
+}
+
+export const setFeaturedArticle = async (articleId: string) => {
+
+    const { user, success } = await VerifyUser()
+
+    if (!success || !user?._id) {
+        return createResponse({
+            success: false,
+            message: "Unauthorized Aceess"
+        }, StatusCode.UNAUTHORIZED)
+    }
+
+    const global = await rateLimit(
+        `rate-setFeatured:user:${user._id}`,
+        20,
+        60
+    );
+
+    if (!global.allowed) {
+        return createResponse({
+            success: false,
+            message: 'Too many requests'
+        }, StatusCode.TOO_MANY_REQUESTS)
+    }
+
+    return await setUserFeaturedArticle({ userId: user?._id, articleId })
+
+}
+
+export const setFeaturedSeries = async (seriesId: string) => {
+
+    const { user, success } = await VerifyUser()
+
+    if (!success || !user?._id) {
+        return createResponse({
+            success: false,
+            message: "Unauthorized Aceess"
+        }, StatusCode.UNAUTHORIZED)
+    }
+
+    const global = await rateLimit(
+        `rate-setFeatured:user:${user._id}`,
+        20,
+        60
+    );
+
+    if (!global.allowed) {
+        return createResponse({
+            success: false,
+            message: 'Too many requests'
+        }, StatusCode.TOO_MANY_REQUESTS)
+    }
+
+    return await setUserFeaturedSeries({ userId: user?._id, seriesId })
 
 }

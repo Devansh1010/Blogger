@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
             .sort({ createdAt: -1 })
             .skip(skip)
             .limit(limit)
-            .select("title desc slug excerpt coverImage tags isPublished createdAt author readTime level views likes publishedAt")
+            .select("title desc slug excerpt hook coverImage tags isPublished isFeatured createdAt author readTime level views likes publishedAt")
             .populate("author", "username avatar")
             .lean()
 

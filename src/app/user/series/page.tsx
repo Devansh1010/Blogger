@@ -1,10 +1,10 @@
-import SeriesList from '@/components/features/series/SeriesListPage'
+import UserSeries from '@/domains/user/components/series/UserSeries'
 
 const Page = () => {
-    
+
   return (
     <div>
-      <SeriesList />
+      <UserSeries />
     </div>
   )
 }

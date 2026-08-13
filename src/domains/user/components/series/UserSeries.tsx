@@ -1,72 +1,70 @@
 'use client'
 
-import { PaginationUI } from "@/components/features/series/components/PaginationUi"
-import ArticleCard from "@/domains/article/components/blog_page/_components/ArticleCard"
-import { Article } from "@/domains/article/type"
-import { useState } from "react"
-import { useFeaturedArticle } from "../../hooks/featured/useFeaturedArticle"
-import { useDeleteArticle } from "../../hooks/useDeleteArticle"
-import { useUserArticles } from "../../hooks/useUserArticles"
-import Actions from "./_components/Actions"
-import UserArticleSearch from "./_components/UserArticleSearch"
-import { UserArticleError } from "./error/UserArticleError"
-import { UserArticlesSkeleton } from "./loader/UserArticleSkeleton"
+import { PaginationUI } from "@/components/features/series/components/PaginationUi";
+import SeriesCard from "@/domains/series/components/SeriesCard";
+import { useGetUserSeries } from "@/domains/series/hooks/useGetUserSeries";
+import { Series } from "@/domains/series/types";
+import { useState } from "react";
+import { useFeaturedSeries } from "../../hooks/featured/useFeaturedSeries";
+import { useDeleteSeries } from "../../hooks/useDeleteSeries";
+import { UserArticleError } from "../articles/error/UserArticleError";
+import { UserArticlesSkeleton } from "../articles/loader/UserArticleSkeleton";
+import Actions from "../articles/_components/Actions";
 
-const UserArticles = () => {
+
+const UserSeries = () => {
 
     const [page, setPage] = useState(1);
-    const [search, setSearch] = useState("");
+    // const [search, setSearch] = useState("");
 
     const {
-        userArticles,
+        userSeries,
         isPending,
         isError,
         refetch
-    } = useUserArticles({ page })
+    } = useGetUserSeries({ page })
 
-    const mutation = useDeleteArticle()
+    const onDelete = useDeleteSeries()
 
-    const onFeature = useFeaturedArticle()
+    const onFeature = useFeaturedSeries()
 
     if (isPending) return <UserArticlesSkeleton />
     if (isError) return <UserArticleError onRetry={refetch} />
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-5">
+        <div className="max-w-7xl mx-auto px-6 py-5 pt-20">
 
             <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-8">
                 <h1 className="text-3xl md:text-5xl font-serif font-bold leading-tight text-foreground">
                     <span className="flex items-center gap-3">
-                        My Blogs
+                        My Series
                     </span>
                 </h1>
 
-                <div className="flex items-center gap-3 w-full md:w-auto">
+                {/* <div className="flex items-center gap-3 w-full md:w-auto">
                     <div className="relative group w-full md:w-72">
                         <UserArticleSearch
                             value={search}
                             setValue={setSearch}
                         />
                     </div>
-                </div>
+                </div> */}
             </header>
 
             <main className="min-h-125">
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                    {userArticles?.blogs?.map((article: Article) => (
-                        <ArticleCard
-                            key={article._id}
-                            article={article}
+                    {userSeries?.map((series: Series) => (
+                        <SeriesCard
+                            key={series.slug}
+                            series={series}
                             topRight={
                                 <Actions
-                                    id={article._id}
-                                    slug={article.slug}
-                                    isFeatured={article.isFeatured}
-                                    isPublished={article.isPublished}
-                                    isArticle={true}
-                                    onDelete={mutation.mutate}
+                                    id={series._id}
+                                    isArticle={false}
+                                    slug={series.slug}
                                     onFeature={onFeature.mutate}
+                                    onDelete={onDelete.mutate}
                                 />
                             }
                         />
@@ -81,7 +79,7 @@ const UserArticles = () => {
                 </div>
                 <PaginationUI
                     page={page}
-                    totalPages={userArticles?.pagination?.totalPages || 1}
+                    totalPages={userSeries?.pagination?.totalPages || 1}
                     onPageChange={(newPage) => {
                         setPage(newPage);
                         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -92,4 +90,4 @@ const UserArticles = () => {
     );
 };
 
-export default UserArticles
+export default UserSeries

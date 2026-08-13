@@ -47,6 +47,7 @@ export interface IBlog {
   likes?: number;
 
   isPublished: boolean;
+  isFeatured: boolean;
   publishedAt?: Date;
 
   createdAt: Date;

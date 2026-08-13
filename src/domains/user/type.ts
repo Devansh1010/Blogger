@@ -15,3 +15,15 @@ export interface UsernameFieldProps {
   usernameData?: CheckUsernameResponse;
   debouncedValue?: string
 }
+
+export interface ActionsProps {
+  id: string;
+  slug: string;
+  isFeatured?: boolean;
+  isPublished?: boolean;
+  isArticle: boolean;
+
+  onDelete?: (id: string) => void;
+  onFeature?: (id: string) => void;
+  onUnpublish?: (id: string) => void;
+}

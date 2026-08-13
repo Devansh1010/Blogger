@@ -20,7 +20,6 @@ const UserArticleSearch = ({
         isError,
     } = useUserSearchSuggestions({ search: debouncedValue });
 
-    console.log(suggestions)
     return (
         <div className='w-full'>
             <Searchbar

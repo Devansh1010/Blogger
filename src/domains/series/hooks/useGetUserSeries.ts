@@ -1,17 +1,20 @@
-import { getUserSeries } from "@/services/series.service"
+
+import { getUserSeries } from "@/domains/user/axios/user.axios"
 import { useQuery } from "@tanstack/react-query"
 
 
-export const useGetUserSeries = () => {
 
-    const { data, isPending, isError } = useQuery({
+export const useGetUserSeries = ({ page, limit }: { page: number, limit?: number }) => {
+
+    const { data, isPending, isError, refetch } = useQuery({
         queryKey: ['user-series'],
-        queryFn: getUserSeries,
+        queryFn: () => getUserSeries({ page, limit }),
     })
 
     return {
-        data,
+        userSeries: data,
         isPending,
-        isError
+        isError,
+        refetch
     }
 }

@@ -10,6 +10,7 @@ const ArticleListPage = ({
     articles,
     limit,
     viewAllHref,
+    topRight
 }: ArticleListSectionProps) => {
     const displayedArticles = limit
         ? articles?.slice(0, limit)
@@ -46,11 +47,13 @@ const ArticleListPage = ({
                     </p>
                 </Card>
             ) : (
-                <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                
+                <div className="grid grid-cols-2 gap-6 lg:grid-cols-3">
                     {displayedArticles.map((article) => (
                         <ArticleCard
                             key={article._id}
                             article={article}
+                            topRight={topRight}
                         />
                     ))}
                 </div>
