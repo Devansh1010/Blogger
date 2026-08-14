@@ -6,6 +6,7 @@ import { useGetUserProfile } from '../../hooks/profile/useGetProfile'
 import OverviewLoader from './loader/OverviewLoader'
 import ProfileError from './error/ProfileError'
 import SeriesListPage from '@/domains/series/components/SeriesListPage'
+import SavedArticle from './_components/SavedArticle'
 
 const Profile = ({ userId }: { userId: string }) => {
     const {
@@ -19,21 +20,28 @@ const Profile = ({ userId }: { userId: string }) => {
     if (isError) return <ProfileError refetch={refetch} />
 
     return (
-        <div>
+        <div className="pb-16">
             <Overview userId={userId} />
 
             <ArticleListPage
-                title='Featured Articles'
+                title="Featured Articles"
                 description="Hand-picked by the author."
-                articles={userData?.userProfile.featuredArticles}
+                articles={userData?.userProfile.featuredArticles ?? []}
+                className="max-w-5xl mt-14 px-6 p-0"
             />
 
             <SeriesListPage
-                title='Featured Series'
+                title="Featured Series"
                 description="Hand-picked by the author."
-                series={userData?.userProfile.featuredSeries}
+                series={userData?.userProfile.featuredSeries ?? []}
+                className="max-w-5xl mt-14 px-6 p-0" 
             />
 
+            <SavedArticle
+                userId={userId}
+                limit={2}
+                viewAllHref={`/user/my-blogs`}
+            />
         </div>
     )
 }

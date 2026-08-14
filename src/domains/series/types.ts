@@ -25,6 +25,7 @@ export interface SeriesListSectionProps {
     series: Series[];
     limit?: number;
     viewAllHref?: string;
+    className?: string;
 }
 
 export interface SeriesCardProps {

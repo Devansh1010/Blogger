@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { Loader2, PlusCircle } from 'lucide-react';
+import { Loader2, Pencil } from 'lucide-react';
 import { FormProvider } from 'react-hook-form'
 import { z } from 'zod';
 import { useGetUserProfile } from '../../hooks/profile/useGetProfile';
@@ -49,10 +49,11 @@ const EditProfile = ({ userId }: { userId: string }) => {
             <DialogTrigger asChild>
                 <Button
                     variant="outline"
-                    className="w-full justify-start gap-3 border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 transition-all py-6"
+                    size="sm"
+                    className="gap-2 rounded-lg font-medium"
                 >
-                    <PlusCircle className="h-4 w-4 text-primary" />
-                    <span className="font-bold tracking-tight">Update User Profile</span>
+                    <Pencil className="size-3.5" />
+                    Edit Profile
                 </Button>
             </DialogTrigger>
 

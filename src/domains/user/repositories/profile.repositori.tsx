@@ -1,3 +1,5 @@
+import { IMPACT_EVENTS } from "@/domains/impact/constants";
+import { ImpactModel } from "@/domains/impact/models/impact.model";
 import { createResponse, StatusCode } from "@/lib/createResponse";
 import { dbConnect } from "@/lib/db"
 import Blog from "@/models/blog_modles/blog.model";
@@ -366,6 +368,87 @@ export const setUserFeaturedSeries = async ({ seriesId, userId }: { seriesId: st
         return createResponse({
             success: false,
             message: "Internal Error Occured"
+        }, StatusCode.INTERNAL_ERROR)
+    }
+}
+
+export const fetchSavedArticles = async (userId: string) => {
+    try {
+        await dbConnect()
+
+        const savedArticles = await ImpactModel.aggregate([
+            {
+                $match: {
+                    authorId: new mongoose.Types.ObjectId(userId),
+                    eventType: IMPACT_EVENTS.SAVED
+                }
+            },
+
+            {
+                $lookup: {
+                    from: "blogs",
+                    localField: "articleId",
+                    foreignField: "_id",
+                    as: "article"
+                }
+            },
+
+            {
+                $unwind: "$article"
+            },
+
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "article.author",
+                    foreignField: "_id",
+                    as: "author"
+                }
+            },
+
+            {
+                $unwind: "$author"
+            },
+
+            {
+                $project: {
+                    _id: "$article._id",
+                    title: "$article.title",
+                    slug: "$article.slug",
+                    coverImage: "$article.coverImage",
+                    views: "$article.views",
+                    likes: "$article.likes",
+                    readTime: "$article.readTime",
+                    level: "$article.level",
+                    publishedAt: "$article.publishedAt",
+
+                    author: {
+                        _id: "$author._id",
+                        username: "$author.username",
+                        avatar: "$author.avatar"
+                    }
+                }
+            }
+        ])
+
+        if (savedArticles.length === 0) {
+            return createResponse({
+                success: false,
+                message: 'No Saved Articles'
+            }, StatusCode.NOT_FOUND)
+        }
+
+        return createResponse({
+            success: true,
+            message: 'Saved Articles found',
+            data: savedArticles
+        }, StatusCode.OK)
+
+    } catch (error) {
+        console.log(error)
+        return createResponse({
+            success: false,
+            message: 'Internal Server Error'
         }, StatusCode.INTERNAL_ERROR)
     }
 }

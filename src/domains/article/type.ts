@@ -74,4 +74,5 @@ export interface ArticleListSectionProps {
     viewAllHref?: string;
     loading?: boolean;
     topRight?: React.ReactNode;
+    className?: string
 }

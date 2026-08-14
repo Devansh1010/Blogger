@@ -1,0 +1,17 @@
+import { getSavedArticles } from "@/domains/user/services/profile.services";
+import { createResponse, StatusCode } from "@/lib/createResponse";
+import { NextRequest } from "next/server";
+
+export async function GET(req: NextRequest) {
+    const { searchParams } = new URL(req.url)
+    const userId = searchParams.get('userId')
+
+    if (!userId) {
+        return createResponse({
+            success: false,
+            message: "UserId is Required"
+        }, StatusCode.BAD_REQUEST)
+    }
+
+    return await getSavedArticles(userId)
+}

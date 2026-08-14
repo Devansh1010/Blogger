@@ -20,71 +20,87 @@ const Overview = ({ userId }: { userId: string }) => {
     return (
         <section className="relative">
             {/* Cover */}
-            <CoverImage
-                userId={userId}
-            />
+            <CoverImage userId={userId} />
 
-            {/* Profile */}
-            <div className="-mt-16 flex flex-col items-center">
-                <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
-                    <AvatarImage src={userData?.userProfile?.avatar ?? ""} />
+            {/* Profile Content */}
+            <div className="mx-auto max-w-5xl px-6">
+                <div className="relative -mt-14">
 
-                    <AvatarFallback className="text-4xl font-semibold">
-                        {userData?.userProfile?.username[0].toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
+                    {/* Avatar + Actions */}
+                    <div className="flex items-end justify-between">
 
-                <div className="mt-4 text-center">
-                    <h1 className="text-3xl font-bold">
-                        {userData?.userProfile?.username}
-                    </h1>
+                        <Avatar className="h-28 w-28 border-4 border-background shadow-md">
+                            <AvatarImage
+                                src={userData?.userProfile?.avatar ?? ""}
+                                alt={userData?.userProfile?.username}
+                            />
 
-                    {/* Optional tagline */}
-                    <p className="mt-3 max-w-xl text-muted-foreground">
-                        Software Engineer • Technical Writer
-                    </p>
+                            <AvatarFallback className="text-3xl font-semibold">
+                                {userData?.userProfile?.username?.[0]?.toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+
+                        {/* Action */}
+                        <div className="mb-1">
+                            {userData.isOwner ? (
+                                <EditProfile userId={userId} />
+                            ) : (
+                                <Button size="sm">
+                                    Follow
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Identity */}
+                    <div className="mt-4">
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            {userData?.userProfile?.username}
+                        </h1>
+
+                    </div>
+
+                    {/* Stats */}
+                    <div className="mt-6 flex items-center gap-6 border-t pt-5 text-sm">
+
+                        <div>
+                            <span className="font-semibold">
+                                {userData?.userProfile?.followers ?? 0}
+                            </span>
+                            <span className="ml-1 text-muted-foreground">
+                                Followers
+                            </span>
+                        </div>
+
+                        <div>
+                            <span className="font-semibold">
+                                {userData?.articleCount ?? 0}
+                            </span>
+                            <span className="ml-1 text-muted-foreground">
+                                Articles
+                            </span>
+                        </div>
+
+                        <div>
+                            <span className="font-semibold">
+                                {userData?.seriesCount ?? 0}
+                            </span>
+                            <span className="ml-1 text-muted-foreground">
+                                Series
+                            </span>
+                        </div>
+
+                        <div>
+                            <span className="font-semibold">
+                                {userData?.totalViews ?? 0}
+                            </span>
+                            <span className="ml-1 text-muted-foreground">
+                                Views
+                            </span>
+                        </div>
+
+                    </div>
                 </div>
-
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-8 text-sm">
-                    <div>
-                        <span className="font-semibold">
-                            {userData?.userProfile?.followers ?? 0}
-                        </span>{" "}
-                        Followers
-                    </div>
-
-                    <div>
-                        <span className="font-semibold">
-                            {userData?.articleCount ?? 0}
-                        </span>{" "}
-                        Articles
-                    </div>
-
-                    <div>
-                        <span className="font-semibold">
-                            {userData?.seriesCount ?? 0}
-                        </span>{" "}
-                        Series
-                    </div>
-
-                    <div className="text-muted-foreground">
-                        <span className="font-semibold">
-                            {userData?.totalViews ?? 0}
-                        </span>{" "}
-                        Views
-                    </div>
-                </div>
-
-                <div className='flex gap-2'>
-                    <Button className="mt-6">
-                        Follow
-                    </Button>
-
-                    {/* <EditProfile
-                        userId={userId}
-                    /> */}
-                </div>
-
             </div>
         </section>
     )
