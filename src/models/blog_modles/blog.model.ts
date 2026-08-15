@@ -56,7 +56,6 @@ const blogSchema = new Schema<IBlog>({
 
   content: {
     type: Schema.Types.Mixed,
-    required: true
   },
 
   excerpt: String,

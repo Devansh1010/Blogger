@@ -31,7 +31,7 @@ export interface IBlog {
   title: string;
   slug: string;
 
-  content: TiptapContent;
+  content?: TiptapContent;
 
   hook?: string;
   insights?: string[];

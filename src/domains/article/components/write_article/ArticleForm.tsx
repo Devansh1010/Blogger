@@ -1,25 +1,11 @@
 'use client'
 
 import { Settings2 } from "lucide-react";
-
-import { useEffect } from "react";
 import { FormProvider } from "react-hook-form";
-
-//Nested Components
-import { CoverImageSection } from "@/components/features/blogs/components/write-blog/CoverImageSection";
-import { EditorField } from "@/components/features/blogs/components/write-blog/EditorContent";
-import { EditorHeader } from "@/components/features/blogs/components/write-blog/EditorHeader";
-import { HookField } from "@/components/features/blogs/components/write-blog/HookField";
-import { InsightsField } from "@/components/features/blogs/components/write-blog/InsightsField";
-import { LevelSelector } from "@/components/features/blogs/components/write-blog/LevelSelector";
-import { SeriesSelector } from "@/components/features/blogs/components/write-blog/SelectSeries";
-import { TagSelector } from "@/components/features/blogs/components/write-blog/TagSelector";
-import { TitleField } from "@/components/features/blogs/components/write-blog/TitleField";
-
 
 import { WriteBlogError } from "@/components/features/blogs/error/WriteBlogError";
 import { WriteBlogLoader } from "@/components/features/blogs/loader/WriteBlogLoader";
-import { CreateBlogVariables } from "@/services/blog.service";
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useGetUserSeries } from "@/domains/series/hooks/useGetUserSeries";
 import { useArticle } from "../../hooks/useArticle";
@@ -27,11 +13,25 @@ import { useTags } from "../../hooks/useTags";
 import { useFormSchema } from "../../hooks/useFormSchema";
 import { useResetFormSchema } from "../../hooks/useResetFormSchema";
 import { useCreateArticle, useUpdateArticle } from "../../hooks/useMutationFrom";
+import { ArticleFormValidation } from "../../type";
+import { useBeforeUnloding } from "../../hooks/useBeforeUnloding";
+// nested Components
+import { EditorHeader } from "./_components/EditorHeader";
+import { CoverImageSection } from "./_components/CoverImageSection";
+import { SeriesSelector } from "./_components/SelectSeries";
+import { TagSelector } from "./TagSelector";
+import { HookField } from "./_components/HookField";
+import { LevelSelector } from "./_components/LevelSelector";
+import { InsightsField } from "./_components/InsightsField";
+import { TitleField } from "./_components/TitleField";
+import { EditorField } from "./_components/EditorContent";
+
+
 
 export default function ArticleForm({ slug }: { slug?: string }) {
 
     // Series data for dropdown
-    const { data, isPending, isError } = useGetUserSeries()
+    const { userSeries, isPending, isError } = useGetUserSeries({ page: 1 })
 
     // Fetch existing article data if in edit mode
     const { article, isArticleFetching } = useArticle(slug)
@@ -43,17 +43,10 @@ export default function ArticleForm({ slug }: { slug?: string }) {
     const methods = useFormSchema()
 
     //destructure methods
-    const { handleSubmit, formState: { isDirty } } = methods;
+    const { handleSubmit, formState: { isDirty }, setValue } = methods;
 
-    useEffect(() => {
-        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            if (isDirty) {
-                e.preventDefault();
-            }
-        };
-        window.addEventListener("beforeunload", handleBeforeUnload);
-        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-    }, [isDirty]);
+    //prevent users from leaving without saving.
+    useBeforeUnloding(isDirty)
 
     useResetFormSchema({ existingArticle: article, methods })
 
@@ -63,13 +56,25 @@ export default function ArticleForm({ slug }: { slug?: string }) {
     // New Update Mutation
     const updateMutation = useUpdateArticle(slug)
 
-    const onSubmit = (formData: CreateBlogVariables) => {
-
+    const onSubmit = (formData: ArticleFormValidation) => {
         if (slug) {
-            updateMutation.mutate({ ...formData, slug: slug });
+            updateMutation.mutate({
+                ...formData,
+                slug,
+            });
         } else {
             mutation.mutate(formData);
         }
+    };
+
+    const handleSaveDraft = () => {
+        setValue("isPublished", false);
+        void handleSubmit(onSubmit)();
+    };
+
+    const handlePublish = () => {
+        setValue("isPublished", true);
+        void handleSubmit(onSubmit)();
     };
 
     if (isPending || (slug && isArticleFetching) || isTagPendding) return <WriteBlogLoader />
@@ -80,7 +85,12 @@ export default function ArticleForm({ slug }: { slug?: string }) {
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)} className="min-h-screen bg-background selection:bg-primary/20">
 
-                <EditorHeader isPending={isPending} isEditMode={!!slug} />
+                <EditorHeader
+                    isPending={isPending}
+                    isEditMode={!!slug}
+                    onSaveDraft={handleSaveDraft}
+                    onPublish={handlePublish}
+                />
 
                 <main className="max-w-4xl mx-auto px-6 pt-6 pb-32">
                     {/* 1. Cover Image - Reduced margin to pull content up */}
@@ -95,7 +105,7 @@ export default function ArticleForm({ slug }: { slug?: string }) {
                         {/* Core Metadata: Series & Tags */}
                         <div className="flex items-center gap-3 pb-4 border-b border-border/40">
 
-                            <SeriesSelector availableSeries={data} />
+                            <SeriesSelector availableSeries={userSeries} />
                             <div className="h-4 w-px bg-border/60" />
 
                             <TagSelector availableTags={Tags} />
@@ -142,7 +152,7 @@ export default function ArticleForm({ slug }: { slug?: string }) {
 
                         <div className="relative">
 
-                            <EditorField existingArticleId={article?._id}/>
+                            <EditorField existingArticleId={article?._id} />
 
                         </div>
                     </article>

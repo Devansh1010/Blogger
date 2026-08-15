@@ -1,7 +1,6 @@
 import adminApi from "@/lib/axios/adminAxios";
-import { CreateBlogVariables } from "@/services/blog.service";
 import axios from "axios"
-import { GetArticleParams } from "../type";
+import { ArticleFormValidation, GetArticleParams } from "../type";
 
 export const articleApi = axios.create({
     baseURL: "/api/blog",
@@ -36,13 +35,13 @@ export const getArticles = async ({
     return response.data.data
 }
 
-export const createArticle = async (data: CreateBlogVariables) => {
+export const createArticle = async (data: ArticleFormValidation) => {
     const res = await articleApi.post("", data);
 
     return res.data
 };
 
-export const updateArticle = async (data: CreateBlogVariables, slug?: string) => {
+export const updateArticle = async (data: ArticleFormValidation, slug?: string) => {
 
     const res = await articleApi.patch(`/${slug}`, data)
 

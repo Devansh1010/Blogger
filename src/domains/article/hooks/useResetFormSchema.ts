@@ -1,10 +1,7 @@
 import { useEffect } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { CreateBlogVariables } from "../type";
+import { ResetFormSchema } from "../type";
 
-
-
-export const useResetFormSchema = ({ existingArticle, methods }: { existingArticle: CreateBlogVariables, methods: UseFormReturn<CreateBlogVariables, unknown, CreateBlogVariables> }) => {
+export const useResetFormSchema = ({ existingArticle, methods }: ResetFormSchema) => {
 
     useEffect(() => {
         if (!existingArticle) return;

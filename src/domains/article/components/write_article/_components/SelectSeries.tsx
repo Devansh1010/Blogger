@@ -20,7 +20,7 @@ type Series = {
 export function SeriesSelector({ availableSeries }: { availableSeries: Series[] }) {
 
     const [openCreate, setOpenCreate] = useState(false);
-    
+
     const { control } = useFormContext();
 
     const {

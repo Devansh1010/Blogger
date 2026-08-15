@@ -1,18 +1,5 @@
 import { JSONContent } from "@tiptap/react";
-
-export interface CreateBlogVariables {
-    blogId?: string
-    title?: string;
-    hook?: string
-    content?: JSONContent;
-    level?: string,
-    insights?: string[],
-    isPublished?: boolean;
-    seriesId?: string;
-    coverImage?: string;
-    tags?: string[];
-    seriesPartOf: string
-}
+import { UseFormReturn } from "react-hook-form";
 
 export type GetArticleParams = {
     page: number;
@@ -20,7 +7,6 @@ export type GetArticleParams = {
     q?: string | null;
     limit: number
 }
-
 
 export interface Article {
     _id: string;
@@ -55,7 +41,6 @@ export interface Article {
     isFeatured?: boolean;
     createdAt?: Date;
 }
-
 export interface ArticleResponse {
     blogs: Article[];
     pagination: {
@@ -75,4 +60,30 @@ export interface ArticleListSectionProps {
     loading?: boolean;
     topRight?: React.ReactNode;
     className?: string
+}
+
+export interface ArticleFormValidation {
+    blogId?: string;
+    title: string;
+    hook?: string;
+    content?: JSONContent;
+    level: "Beginner" | "Intermediate" | "Advanced";
+    insights?: string[];
+    isPublished: boolean;
+    seriesId?: string;
+    coverImage?: string;
+    tags: string[];
+    seriesPartOf?: string;
+}
+
+export interface ResetFormSchema {
+    existingArticle: ArticleFormValidation,
+    methods: UseFormReturn<ArticleFormValidation, unknown, ArticleFormValidation>
+}
+
+export interface EditorHeaderPrpos { 
+    isPending: boolean, 
+    isEditMode: boolean,
+    onPublish: () => void,
+    onSaveDraft: () => void,
 }

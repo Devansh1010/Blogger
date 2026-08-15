@@ -4,7 +4,7 @@ import { getArticle } from "../axios/article.axios"
 export const useArticle = (slug?: string) => {
 
     const { data, isPending, isError, refetch } = useQuery({
-        queryKey: ['articles', { slug }],
+        queryKey: ['article', { slug }],
         queryFn: () => getArticle(slug!),
         staleTime: 1000 * 60 * 5,
         enabled: !!slug
