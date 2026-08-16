@@ -6,15 +6,14 @@ import { ArticleFormValidation } from "../type";
 
 const defaultValues: ArticleFormValidation = {
     title: "",
-    hook: "",
+    hook: undefined,
     level: "Beginner",
     insights: [],
     tags: [],
     content: {},
     isPublished: false,
-    seriesId: "",
+    seriesPartOf: undefined,
     coverImage: "",
-    seriesPartOf: ""
 };
 
 export const useFormSchema = () => {

@@ -28,7 +28,6 @@ const blogSchema = new Schema<IBlog>({
   hook: {
     type: String,
     trim: true,
-    minlength: 10,
     maxlength: 120,
   },
 

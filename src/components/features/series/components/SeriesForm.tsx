@@ -9,7 +9,6 @@ import z from "zod";
 import { Button } from "@/components/ui/button";
 import { seriesFormSchema } from "@/lib/schemas/series/series.schema";
 import { createSeries, getSeriesFormData, updateSeries } from "@/services/series.service";
-import { TitleField } from "../../blogs/components/write-blog/TitleField";
 import DescriptionField from "./create-series/DescriptionField";
 import TagsField from "./create-series/TagsField";
 import SaveTypeButtons from "./create-series/SaveTypeButtons";
@@ -28,6 +27,7 @@ import CoverImageSeries from "./create-series/CoverImageSeries";
 import { useEffect } from "react";
 import { FormSkeleton } from "../loader/FormSkeleton";
 import { cn } from "@/lib/utils";
+import { TitleField } from "@/domains/article/components/write_article/_components/TitleField";
 
 interface SeriesFormProps {
   slug?: string;

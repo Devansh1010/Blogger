@@ -14,7 +14,7 @@ export const useResetFormSchema = ({ existingArticle, methods }: ResetFormSchema
             tags: existingArticle.tags ?? [],
             content: existingArticle.content,
             isPublished: existingArticle.isPublished ?? false,
-            seriesId: existingArticle.seriesPartOf ?? "",
+            seriesPartOf: existingArticle.seriesPartOf ?? "",
             coverImage: existingArticle.coverImage ?? "",
         });
 

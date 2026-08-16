@@ -1,3 +1,4 @@
+import { TiptapContent } from "@/types/blog";
 import { JSONContent } from "@tiptap/react";
 import { UseFormReturn } from "react-hook-form";
 
@@ -70,7 +71,6 @@ export interface ArticleFormValidation {
     level: "Beginner" | "Intermediate" | "Advanced";
     insights?: string[];
     isPublished: boolean;
-    seriesId?: string;
     coverImage?: string;
     tags: string[];
     seriesPartOf?: string;
@@ -81,9 +81,22 @@ export interface ResetFormSchema {
     methods: UseFormReturn<ArticleFormValidation, unknown, ArticleFormValidation>
 }
 
-export interface EditorHeaderPrpos { 
-    isPending: boolean, 
+export interface EditorHeaderPrpos {
+    isPending: boolean,
     isEditMode: boolean,
     onPublish: () => void,
     onSaveDraft: () => void,
+}
+
+export interface WriteArticleProps {
+    title: string,
+    content?: TiptapContent,
+    tags?: string[],
+    isPublished: boolean,
+    coverImage?: string,
+    seriesPartOf?: string,
+    hook?: string,
+    insights?: string[],
+    level?: "Beginner" | "Intermediate" | "Advanced";
+    author: string
 }

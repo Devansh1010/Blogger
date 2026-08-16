@@ -19,7 +19,7 @@ import { useBeforeUnloding } from "../../hooks/useBeforeUnloding";
 import { EditorHeader } from "./_components/EditorHeader";
 import { CoverImageSection } from "./_components/CoverImageSection";
 import { SeriesSelector } from "./_components/SelectSeries";
-import { TagSelector } from "./TagSelector";
+import { TagSelector } from "./_components/TagSelector";
 import { HookField } from "./_components/HookField";
 import { LevelSelector } from "./_components/LevelSelector";
 import { InsightsField } from "./_components/InsightsField";

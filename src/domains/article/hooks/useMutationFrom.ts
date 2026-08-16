@@ -1,10 +1,11 @@
 
-import { CreateBlogVariables } from "@/services/blog.service";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { createArticle, updateArticle } from "../axios/article.axios";
+import { ArticleFormValidation } from "../type";
 
 export const useCreateArticle = () => {
 
@@ -12,7 +13,7 @@ export const useCreateArticle = () => {
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
-        mutationFn: (variables: CreateBlogVariables) => createArticle(variables),
+        mutationFn: (variables: ArticleFormValidation) => createArticle(variables),
 
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["blogs"] });
@@ -32,14 +33,13 @@ export const useCreateArticle = () => {
     return mutation
 }
 
-
 export const useUpdateArticle = (slug?: string) => {
 
     const router = useRouter();
     const queryClient = useQueryClient();
 
     const updateMutation = useMutation({
-        mutationFn: (variables: CreateBlogVariables & { slug: string }) =>
+        mutationFn: (variables: ArticleFormValidation & { slug: string }) =>
             updateArticle(variables, slug),
 
         onSuccess: (data) => {

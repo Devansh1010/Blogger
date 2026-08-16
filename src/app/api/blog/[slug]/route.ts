@@ -156,7 +156,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sl
     try {
         const { slug } = await params
 
-        const { title, content, tags, isPublished, coverImage, seriesId, level, hook, insights } =
+        const { title, content, tags, isPublished, coverImage, seriesPartOf, level, hook, insights } =
             await req.json()
 
         const auth = await VerifyUser()
@@ -230,9 +230,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sl
             }
         }
 
-        if (seriesId) {
+        if (seriesPartOf) {
 
-            if (blog.seriesPartOf?.toString() !== seriesId) {
+            if (blog.seriesPartOf?.toString() !== seriesPartOf) {
 
                 const oldSeriesId = blog.seriesPartOf
 
@@ -240,11 +240,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sl
                 if (oldSeriesId) {
                     await SeriesBlog.findOneAndUpdate(
                         { series: oldSeriesId, blog: blog._id },
-                        { $set: { series: seriesId } }
+                        { $set: { series: seriesPartOf } }
                     )
                 }
 
-                blog.seriesPartOf = seriesId
+                blog.seriesPartOf = seriesPartOf
 
             }
         }

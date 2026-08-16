@@ -1,5 +1,5 @@
 import { useController, useFormContext } from "react-hook-form";
-import { AlertCircle, Library, ChevronDown, PlusCircle } from "lucide-react";
+import { AlertCircle, Library, PlusCircle } from "lucide-react";
 import {
     Combobox,
     ComboboxContent,
@@ -28,13 +28,13 @@ export function SeriesSelector({ availableSeries }: { availableSeries: Series[] 
         fieldState: { error }
     } = useController({
         control,
-        name: 'seriesId'
+        name: 'seriesPartOf'
     });
 
     const currentSeries = availableSeries.find(s => s._id === value);
 
     return (
-        <div className="group inline-flex flex-col gap-2 w-full max-w-70">
+        <div className="group inline-flex flex-col gap-2 w-full max-w-90">
             {/* 1. Header: Label + Status */}
             <div className="flex items-center justify-between px-1">
                 <div className="flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity">
@@ -88,13 +88,12 @@ export function SeriesSelector({ availableSeries }: { availableSeries: Series[] 
                                 placeholder="Select collection..."
                                 className="bg-transparent border-none p-0 focus:ring-0 text-xs font-bold text-foreground/80 placeholder:text-muted-foreground/40 cursor-pointer w-full truncate"
                             />
-                            <ChevronDown className={`w-3 h-3 transition-colors ${error ? 'text-destructive' : 'text-muted-foreground/40'}`} />
                         </div>
                     </div>
                 </div>
 
                 {/* 3. Popover */}
-                <ComboboxContent className="mt-2 min-w-65 shadow-2xl border-muted/50 backdrop-blur-xl bg-background/95 rounded-2xl overflow-hidden p-1.5">
+                <ComboboxContent className="mt-2 min-w-75 shadow-2xl border-muted/50 backdrop-blur-xl bg-background/95 rounded-2xl overflow-hidden p-1.5">
                     <ComboboxEmpty className="py-8 text-center text-[11px] text-muted-foreground font-medium italic">
                         No collection matches.
                     </ComboboxEmpty>

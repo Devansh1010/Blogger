@@ -33,11 +33,6 @@ export const articleFormValidation = z
             .boolean()
             .default(false),
 
-        seriesId: z
-            .string()
-            .optional()
-            .or(z.literal("")),
-
         coverImage: z
             .string()
             .url("Invalid image URL")
@@ -50,15 +45,15 @@ export const articleFormValidation = z
 
         seriesPartOf: z
             .string()
-            .optional()
-            .or(z.literal("")),
+            .transform((value) => value || undefined)
+            .optional(),
     })
     .superRefine((data, ctx) => {
         if (!data.isPublished) {
             return;
         }
 
-        
+
         if (!data.hook?.trim()) {
             ctx.addIssue({
                 code: "custom",
@@ -73,7 +68,7 @@ export const articleFormValidation = z
             });
         }
 
-       
+
         if (!data.insights || data.insights.length === 0) {
             ctx.addIssue({
                 code: "custom",
