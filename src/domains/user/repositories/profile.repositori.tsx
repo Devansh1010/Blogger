@@ -92,7 +92,9 @@ export const fetchUserProfileData = async ({ userId, isOwner }: { userId: string
                     followersCount: 1,
                     followingCount: 1,
                     featuredArticles: 1,
-                    featuredSeries: 1
+                    featuredSeries: 1,
+                    badges: 1,
+                    selectedBadges: 1,
                 }
             }
         ])
@@ -162,7 +164,7 @@ export const setUserFeaturedArticle = async ({ articleId, userId }: { articleId:
         }
 
         const isAuthor = await Blog.findById(articleId)
-            .select('author')
+            .select('author isPublished')
             .lean()
 
         if (isAuthor.author?.toString() !== userId.toString()) {
@@ -170,6 +172,13 @@ export const setUserFeaturedArticle = async ({ articleId, userId }: { articleId:
                 success: false,
                 message: "Unauthorized"
             }, StatusCode.UNAUTHORIZED)
+        }
+
+        if (!isAuthor.isPublished) {
+            return createResponse({
+                success: false,
+                message: "Can't featured draft articles"
+            }, StatusCode.BAD_REQUEST)
         }
 
         const isExist = user.featuredArticles?.filter((article: Types.ObjectId) => article.toString() == articleId.toString())

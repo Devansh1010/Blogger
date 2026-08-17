@@ -14,7 +14,7 @@ export const useProfileForm = () => {
             email: "",
             username: "",
             profileImage: null,
-
+            selectedBadges: []
         },
     });
 }

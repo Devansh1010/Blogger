@@ -19,7 +19,8 @@ export const useResetProfileForm = (
             },
             coverImage: {
                 url: data.coverImage ?? "",
-            }
+            },
+            selectedBadges: data.selectedBadges ?? [],
         });
     }, [data, form]);
 };

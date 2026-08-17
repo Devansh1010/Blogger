@@ -3,6 +3,7 @@ export interface UserData {
   email?: string;
   avatar?: string | null;
   coverImage?: string | null
+  selectedBadges: string[] | []
 }
 
 interface CheckUsernameResponse {
@@ -26,4 +27,11 @@ export interface ActionsProps {
   onDelete?: (id: string) => void;
   onFeature?: (id: string) => void;
   onUnpublish?: (id: string) => void;
+}
+
+export interface Badges {
+  id: string,
+  name: string,
+  description?: string,
+  icon: string 
 }

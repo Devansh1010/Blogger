@@ -1,5 +1,6 @@
 
 import { getUserProfile } from '@/domains/user/services/profile.services'
+import { Badges } from '@/domains/user/type'
 import { createResponse, StatusCode } from '@/lib/createResponse'
 import { dbConnect } from '@/lib/db'
 import { VerifyUser } from '@/lib/verifyUser/userVerification'
@@ -27,7 +28,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  
+
   try {
 
     const auth = await VerifyUser();
@@ -43,7 +44,59 @@ export async function PATCH(req: NextRequest) {
 
     await dbConnect()
 
-    const { email, username, profileImage, coverImage } = await req.json()
+    const body = await req.json()
+
+    // If client is updating selectedBadges
+    if (body.selectedBadges) {
+      const selectedBadges = body.selectedBadges
+
+      if (!Array.isArray(selectedBadges)) {
+        return createResponse({
+          success: false,
+          message: 'selectedBadges must be an array'
+        }, StatusCode.BAD_REQUEST)
+      }
+
+      if (selectedBadges.length > 3) {
+        return createResponse({
+          success: false,
+          message: 'You can select up to 3 badges'
+        }, StatusCode.BAD_REQUEST)
+      }
+
+      const user = await User.findById(userId).select('badges').lean();
+
+      if (!user) {
+        return createResponse({
+          success: false,
+          message: 'User not found'
+        }, StatusCode.NOT_FOUND)
+      }
+
+      const ownedBadgeIds = (user.badges || []).map((b: Badges) => b.id)
+
+      for (const bid of selectedBadges) {
+        if (!ownedBadgeIds.includes(bid)) {
+          return createResponse({
+            success: false,
+            message: `Badge ${bid} not owned by user`
+          }, StatusCode.BAD_REQUEST)
+        }
+      }
+
+      await User.updateOne(
+        { _id: userId },
+        {
+          $set: { selectedBadges }
+        })
+
+      return createResponse({ 
+        success: true, 
+        message: 'Selected badges updated' 
+      }, StatusCode.OK)
+    }
+
+    const { email, username, profileImage, coverImage } = body
 
     //validate the data
 

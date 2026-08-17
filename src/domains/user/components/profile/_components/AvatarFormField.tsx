@@ -30,12 +30,18 @@ const AvatarFormField = () => {
                   </div>
                 ) : (
                   <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-primary/20 shadow-inner">
-                    <Image
+                    {
+                      field.value.url ?
+                      (<Image
                       src={field.value.url}
                       alt="profile"
                       fill
                       className="object-cover transition duration-500 group-hover:scale-110"
-                    />
+                    />) : 
+                    (
+                      <p>No Profile photo</p>
+                    )
+                    }
                     {/* Interactive Circular Overlay */}
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-[1px]">
                       <Button

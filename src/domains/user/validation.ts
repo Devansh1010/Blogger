@@ -6,6 +6,19 @@ const ImageSchema = z.object({
     name: z.string().optional()
 });
 
+const selectedBadges = z
+    .array(z.string())
+    .max(3, {
+        message: "You can select a maximum of 3 badges",
+    })
+    .refine(
+        (badges) => new Set(badges).size === badges.length,
+        {
+            message: "Duplicate badges are not allowed",
+        }
+    )
+    .optional()
+
 export const updateUserSchema = z.object({
     username: z.string()
         .min(2, { message: 'Minimum 2 characters required in Username' })
@@ -19,7 +32,9 @@ export const updateUserSchema = z.object({
 
     profileImage: ImageSchema.nullable().optional(),
 
-    coverImage: ImageSchema.nullable().optional()
+    coverImage: ImageSchema.nullable().optional(),
+
+    selectedBadges: selectedBadges
 })
 
 export type ProfileFormValues = z.infer<typeof updateUserSchema>;

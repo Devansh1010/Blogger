@@ -45,7 +45,7 @@ const SavedArticle = ({
         : savedArticle;
 
     return (
-        <section className="mx-auto mt-14 w-full max-w-5xl px-6">
+        <section className="mx-auto mt-14 w-full max-w-5xl px-6 ">
             {/* Header */}
             <div className="mb-6 flex items-end justify-between gap-4">
                 <div>

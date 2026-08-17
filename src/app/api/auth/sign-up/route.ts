@@ -6,6 +6,7 @@ import { sendVerification } from '@/helpers/sendVerificationEmail'
 
 export async function POST(request: Request) {
   await dbConnect()
+  
   try {
     const { username, email, password } = await request.json()
 
@@ -97,7 +98,7 @@ export async function POST(request: Request) {
       const expiryDate = new Date()
       expiryDate.setHours(expiryDate.getHours() + 1)
 
-      await User.create({
+      const createdUser = await User.create({
         username,
         email,
         password: hashedPassword,
@@ -106,6 +107,20 @@ export async function POST(request: Request) {
         verifyExpiry: expiryDate,
         isVerified: false,
       })
+
+      // Award "Founding Member" badge to first 100 users
+      try {
+        const userCount = await User.countDocuments()
+        if (userCount <= 100) {
+          const { findBadgeById } = await import('@/domains/user/constants')
+          const badge = findBadgeById('founding-member')
+          if (badge) {
+            await User.updateOne({ _id: createdUser._id }, { $addToSet: { badges: { id: badge.id, name: badge.name, description: badge.description, icon: badge.icon, awardedAt: new Date() } } })
+          }
+        }
+      } catch (e) {
+        console.warn('Badge assignment failed', e)
+      }
 
       const emailResponce = await sendVerification(email, username, verifyCode)
 

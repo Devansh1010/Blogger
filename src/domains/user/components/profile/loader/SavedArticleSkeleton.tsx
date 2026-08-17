@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const SavedArticleSkeleton = () => {
     return (
-        <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-6 lg:grid-cols-2 mt-5">
             {Array.from({ length: 4 }).map((_, index) => (
                 <div
                     key={index}

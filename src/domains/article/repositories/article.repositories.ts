@@ -86,6 +86,44 @@ export const writeArticle = async ({
             }
         }
 
+        // ================= Badge awarding =================
+        try {
+            const totalArticles = await Blog.countDocuments({ author });
+
+            const { findBadgeById } = await import('@/domains/user/constants');
+
+            const thresholds: { [k: number]: string } = {
+                1: 'first-article',
+                5: 'author-5',
+                10: 'author-10',
+                15: 'author-15'
+            };
+
+            const badgeId = thresholds[totalArticles];
+
+            if (badgeId) {
+                const badge = findBadgeById(badgeId);
+
+                if (badge) {
+                    await User.updateOne(
+                        { _id: author },
+                        {
+                            $addToSet: {
+                                badges: {
+                                    id: badge.id,
+                                    name: badge.name,
+                                    description: badge.description,
+                                    icon: badge.icon,
+                                    awardedAt: new Date()
+                                }
+                            }
+                        });
+                }
+            }
+        } catch (e) {
+            console.warn('Badge assignment failed', e);
+        }
+
         return createResponse(
             {
                 success: true,

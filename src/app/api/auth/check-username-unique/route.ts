@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     try {
         //get the entire url
         const { searchParams } = new URL(request.url)
-        //get only username from entire url
+       
         const queryParam = {
             username: searchParams.get('username'),
         }
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
 
             return createResponse(
                 { success: false, message: 'Username not available' },
-                StatusCode.UNAUTHORIZED
+                StatusCode.OK
             );
         }
 
@@ -49,7 +49,7 @@ export async function GET(request: Request) {
         );
 
     } catch (error: unknown) {
-        console.log('catch uername-abailable.ts: Error checking username ', error)
+        console.log('Error checking username ', error)
 
         return createResponse(
             { success: false, message: 'Error checking username availability.' },

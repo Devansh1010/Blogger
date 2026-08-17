@@ -16,11 +16,13 @@ import UsernameFormField from './_components/UsernameFormField';
 import EmailFormField from './_components/EmailFormField';
 import CoverImageFormField from './_components/CoverImageField';
 import EditFormHeader from './_components/EditFormHeader';
+import BadgeSelector from './_components/BadgeSelector';
 
 const EditProfile = ({ userId }: { userId: string }) => {
 
     const { userData } = useGetUserProfile(userId)
 
+    console.log(userData)
 
     const form = useProfileForm()
 
@@ -89,6 +91,9 @@ const EditProfile = ({ userId }: { userId: string }) => {
                             <EmailFormField
                                 mutationPendding={mutation.isPending}
                             />
+
+                            {/* Badge Selector */}
+                            <BadgeSelector userId={userId} />
 
                             {/* Actions */}
                             <div className="pt-4">

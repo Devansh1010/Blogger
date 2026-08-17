@@ -1,6 +1,14 @@
 
 import { Schema, model, models } from 'mongoose'
 
+export interface IBadge {
+  id: string,
+  name: string,
+  description?: string,
+  icon?: string,
+  awardedAt?: Date,
+}
+
 export interface IUser {
   _id?: Schema.Types.ObjectId,
   username: string,
@@ -15,10 +23,12 @@ export interface IUser {
   isVerified: boolean,
   verifyCode?: string,
   verifyExpiry?: Date,
-  followersCount: number
-  followingCount: number
+  followersCount: number,
+  followingCount: number,
   featuredArticles: Schema.Types.ObjectId[],
   featuredSeries: Schema.Types.ObjectId[],
+  badges?: IBadge[],
+  selectedBadges?: string[],
 }
 
 const userSchema = new Schema<IUser>(
@@ -117,6 +127,21 @@ const userSchema = new Schema<IUser>(
         type: Schema.Types.ObjectId,
         ref: 'Series'
       }
+    ],
+
+    badges: [
+      {
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        description: { type: String },
+        icon: { type: String },
+        awardedAt: { type: Date, default: Date.now },
+      }
+    ],
+
+    // IDs of badges the user wants to show on profile (max 3)
+    selectedBadges: [
+      { type: String }
     ],
 
   },

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 const SavedArticleError = () => {
     return (
-        <div className="flex min-h-75 flex-col items-center justify-center rounded-xl border bg-muted/20 px-6 text-center">
+        <div className="flex min-h-75 flex-col items-center justify-center rounded-xl border bg-muted/20 px-6 text-center mt-14">
             <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-destructive/10">
                 <AlertCircle className="size-5 text-destructive" />
             </div>

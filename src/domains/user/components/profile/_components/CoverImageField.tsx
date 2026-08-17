@@ -42,12 +42,18 @@ const CoverImageFormField = () => {
                         ) : (
                             <div className="group relative h-56">
 
-                                <Image
-                                    src={field.value.url?? ''}
-                                    alt="Cover"
-                                    fill
-                                    className="object-cover transition duration-500 group-hover:scale-105"
-                                />
+                                {
+                                    field.value.url ?
+                                        (<Image
+                                            src={field.value.url}
+                                            alt="Cover"
+                                            fill
+                                            className="object-cover transition duration-500 group-hover:scale-105"
+                                        />) :
+                                        (
+                                            <p>No CoverImage</p>
+                                        )
+                                }
 
                                 <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black/40 opacity-0 transition-all duration-300 group-hover:opacity-100">
 

@@ -16,7 +16,6 @@ export function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false)
     const pathname = usePathname()
 
-
     const [scrolled, setScrolled] = React.useState(false)
 
     React.useEffect(() => {

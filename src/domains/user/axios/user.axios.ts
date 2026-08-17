@@ -34,6 +34,8 @@ export const getUserArticleSuggestions = async ({ search }: { search: string }) 
 };
 
 export const getMe = async (userId: string) => {
+    if(!userId) return {}
+
     const res = await userApi.get(`/me?userId=${userId}`,)
 
     return res.data.data
@@ -65,4 +67,12 @@ export const getSavedArticles = async (userId: string) => {
     const res = await userApi.get(`/saved/article?userId=${userId}`)
 
     return res.data.data
+}
+
+export const updateSelectedBadges = async (selectedBadges: string[]) => {
+    const { data } = await axios.patch("/api/user/me", {
+        selectedBadges,
+    })
+
+    return data
 }

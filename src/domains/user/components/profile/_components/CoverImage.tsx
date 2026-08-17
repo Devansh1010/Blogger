@@ -14,11 +14,12 @@ const CoverImage = ({ userId }: { userId: string }) => {
 
     if (isPending) return <OverviewLoader />
     if (isError) return <ProfileError refetch={refetch} />
+    
     return (
         <div className="relative h-56 overflow-hidden rounded-xl bg-linear-to-r from-slate-800 via-slate-700 to-slate-900">
-            {userData?.userProfile ? (
+            {userData?.userProfile.coverImage ? (
                 <Image
-                    src={userData.userProfile.coverImage}
+                    src={userData?.userProfile?.coverImage }
                     alt="Cover Image"
                     fill
                     className="object-cover"

@@ -27,21 +27,24 @@ const Profile = ({ userId }: { userId: string }) => {
                 title="Featured Articles"
                 description="Hand-picked by the author."
                 articles={userData?.userProfile.featuredArticles ?? []}
-                className="max-w-5xl mt-14 px-6 p-0"
+                className="max-w-5xl mt-14 px-6"
             />
 
             <SeriesListPage
                 title="Featured Series"
                 description="Hand-picked by the author."
                 series={userData?.userProfile.featuredSeries ?? []}
-                className="max-w-5xl mt-14 px-6 p-0" 
+                className="max-w-5xl mt-14 px-6 "
             />
 
-            <SavedArticle
-                userId={userId}
-                limit={2}
-                viewAllHref={`/user/my-blogs`}
-            />
+            {
+                userData?.isOwner &&
+                <SavedArticle
+                    userId={userId}
+                    limit={2}
+                    viewAllHref={`/user/my-blogs`}
+                />
+            }
         </div>
     )
 }
