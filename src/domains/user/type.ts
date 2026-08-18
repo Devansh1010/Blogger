@@ -33,5 +33,9 @@ export interface Badges {
   id: string,
   name: string,
   description?: string,
-  icon: string 
+  icon: string,
+  // optional metadata populated from BADGES constants
+  category?: string,
+  rarity?: string,
+  color?: string,
 }

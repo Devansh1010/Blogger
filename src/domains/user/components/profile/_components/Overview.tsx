@@ -8,6 +8,8 @@ import CoverImage from './CoverImage'
 import { Badges } from '@/domains/user/type'
 import Image from 'next/image'
 import ResetPassword from './ResetPassword'
+import React from 'react'
+import UserBadges from './UserBadges'
 
 const Overview = ({ userId }: { userId: string }) => {
     const {
@@ -94,6 +96,11 @@ const Overview = ({ userId }: { userId: string }) => {
                                     ))}
                                 </div>
                             )}
+
+                            {/* Showcase all user badges (new component) */}
+                            <div>
+                                <UserBadges userId={userId} />
+                            </div>
                         </div>
 
                         <div className="mt-6 grid gap-3 border-t border-border/70 pt-5 sm:grid-cols-2 lg:grid-cols-4">

@@ -108,19 +108,10 @@ export async function POST(request: Request) {
         isVerified: false,
       })
 
-      // Award "Founding Member" badge to first 100 users
-      try {
-        const userCount = await User.countDocuments()
-        if (userCount <= 100) {
-          const { findBadgeById } = await import('@/domains/user/constants')
-          const badge = findBadgeById('founding-member')
-          if (badge) {
-            await User.updateOne({ _id: createdUser._id }, { $addToSet: { badges: { id: badge.id, name: badge.name, description: badge.description, icon: badge.icon, awardedAt: new Date() } } })
-          }
-        }
-      } catch (e) {
-        console.warn('Badge assignment failed', e)
-      }
+      // Badge assignment is handled by the dedicated badges flow/service.
+      // Founding member awarding and other strategic badge logic should be executed
+      // by the badges service (e.g. via an admin endpoint or background job) instead
+      // of inline during sign-up to keep responsibilities separated.
 
       const emailResponce = await sendVerification(email, username, verifyCode)
 

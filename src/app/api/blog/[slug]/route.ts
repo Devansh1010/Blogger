@@ -12,13 +12,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
 
         const auth = await VerifyUser()
 
-        // if (!auth.success) {
-        //     return createResponse(
-        //         { success: false, message: "Unauthorized" },
-        //         StatusCode.UNAUTHORIZED
-        //     )
-        // }
-
         await dbConnect()
 
         const result = await Blog.aggregate([
@@ -217,6 +210,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sl
             blog.tags = Array.isArray(tags) ? tags : []
         }
 
+        
+        // Detect transition from draft -> published and award badges accordingly
+        const wasPublished = blog.isPublished;
+
         // publishing logic
         if (typeof isPublished === "boolean") {
             blog.isPublished = isPublished
@@ -261,13 +258,41 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sl
 
         // update insights
         if (insights) {
-            // Ensure it's an array and clean up empty strings or non-string values
             blog.insights = Array.isArray(insights)
                 ? insights.filter((i: string) => i.trim())
                 : [];
         }
 
         await blog.save()
+
+        try {
+            // If the blog became published in this update, evaluate authoring badges
+            if (!wasPublished && blog.isPublished) {
+                const totalPublishedArticles = await Blog.countDocuments({ author: blog.author, isPublished: true });
+
+                const thresholds: { [k: number]: string } = {
+                    1: 'first-article',
+                    5: 'author-5',
+                    10: 'author-10',
+                    15: 'author-15'
+                };
+
+                const badgeId = thresholds[totalPublishedArticles];
+
+                if (badgeId) {
+                    const badgeService = await import('@/domains/badges/utils/badgeService');
+
+                    const res = await badgeService.default.awardBadgeToUser(String(blog.author), badgeId);
+
+                    if (!res.success) {
+                        console.warn('Badge awarding skipped:', res.message);
+                    }
+
+                }
+            }
+        } catch (e) {
+            console.warn('Error while awarding badges on publish', e);
+        }
 
         return createResponse(
             {

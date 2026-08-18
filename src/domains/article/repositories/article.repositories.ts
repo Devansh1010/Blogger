@@ -2,9 +2,9 @@ import { createResponse, StatusCode } from "@/lib/createResponse";
 import { dbConnect } from "@/lib/db";
 import { generateSlug } from "@/lib/slug-generater";
 import Blog from "@/models/blog_modles/blog.model";
-import User from "@/models/user_models/user.model";
-import Series from "@/models/series_models/series.model";
 import SeriesBlog from "@/models/series_models/series-blog.model";
+import Series from "@/models/series_models/series.model";
+import User from "@/models/user_models/user.model";
 import { WriteArticleProps } from "../type";
 import { readTimeAndExcerpt } from "../utils/createArticle";
 
@@ -87,42 +87,33 @@ export const writeArticle = async ({
         }
 
         // ================= Badge awarding =================
-        try {
-            const totalArticles = await Blog.countDocuments({ author });
+                try {
+                    // Only award authoring badges when article is published
+                    if (isPublished) {
+                        // Count only published articles for the author
+                        const totalPublishedArticles = await Blog.countDocuments({ author, isPublished: true });
 
-            const { findBadgeById } = await import('@/domains/user/constants');
+                        const thresholds: { [k: number]: string } = {
+                            1: 'first-article',
+                            5: 'author-5',
+                            10: 'author-10',
+                            15: 'author-15'
+                        };
 
-            const thresholds: { [k: number]: string } = {
-                1: 'first-article',
-                5: 'author-5',
-                10: 'author-10',
-                15: 'author-15'
-            };
+                        const badgeId = thresholds[totalPublishedArticles];
 
-            const badgeId = thresholds[totalArticles];
-
-            if (badgeId) {
-                const badge = findBadgeById(badgeId);
-
-                if (badge) {
-                    await User.updateOne(
-                        { _id: author },
-                        {
-                            $addToSet: {
-                                badges: {
-                                    id: badge.id,
-                                    name: badge.name,
-                                    description: badge.description,
-                                    icon: badge.icon,
-                                    awardedAt: new Date()
-                                }
+                        if (badgeId) {
+                            // award via central badge service (enforces uniqueness/maxAwards)
+                            const badgeService = await import('@/domains/badges/utils/badgeService');
+                            const res = await badgeService.default.awardBadgeToUser(String(author), badgeId);
+                            if (!res.success) {
+                                console.warn('Badge awarding skipped:', res.message);
                             }
-                        });
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Badge assignment failed', e);
                 }
-            }
-        } catch (e) {
-            console.warn('Badge assignment failed', e);
-        }
 
         return createResponse(
             {
