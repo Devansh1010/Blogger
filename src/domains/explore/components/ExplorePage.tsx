@@ -21,32 +21,48 @@ const ExplorePage = () => {
     } = useExploreArticles({ page });
 
 
+    const popularTopics = ["Frontend", "Backend", "AI", "System Design", "DevOps", "Productivity"]
+
     return (
-        <div className="mx-auto max-w-7xl px-4 py-10 md:px-6 lg:py-10">
-            {/* HEADER */}
+        <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 lg:py-10">
+            <section className="relative overflow-hidden rounded-[32px] border border-border/60 bg-linear-to-br from-background via-background to-primary/3 px-4 py-8 text-center shadow-[0_24px_90px_-42px_rgba(15,23,42,0.45)] sm:px-6 lg:px-8 lg:py-10">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.20),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(168,85,247,0.14),transparent_35%)]" />
 
-            <section className="flex min-h-[85vh] flex-col items-center justify-center ">
-                <div className="mb-16 flex justify-center">
-                    <div className="w-full max-w-xl text-center space-y-3">
-                        <h1 className="text-3xl font-bold">
-                            What do you want to learn today?
-                        </h1>
+                <div className="relative flex items-center justify-center">
+                    <div className="flex w-full flex-col items-center">
 
-                        <p className="mt-3 text-muted-foreground">
-                            Search thousands of developer insights,
-                            tutorials, and curated learning series.
+                        <p className="mb-4 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.28rem] text-primary">
+                            Explore
                         </p>
 
-                        <ExploreSearchbar
-                            value={search}
-                            setValue={setSearch}
-                        />
+                        <h1 className="max-w-2xl text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+                            Learn from the ideas shaping modern engineering.
+                        </h1>
+
+                        <p className="mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
+                            Search developer insights, practical tutorials, and highly curated
+                            learning paths designed to keep you moving forward.
+                        </p>
+
+                        <div className="mt-8 w-full max-w-2xl rounded-[24px] border border-border/70 bg-background/80 p-3 text-left shadow-[0_20px_60px_-30px_rgba(15,23,42,0.45)] backdrop-blur-sm">
+                            <ExploreSearchbar value={search} setValue={setSearch} />
+                        </div>
+
+                        <div className="mt-6 flex flex-wrap justify-center gap-2">
+                            {popularTopics.map((topic) => (
+                                <span
+                                    key={topic}
+                                    className="rounded-full border border-border/70 bg-muted/40 px-3 py-1.5 text-xs font-medium text-muted-foreground"
+                                >
+                                    {topic}
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                <div className="mt-12 flex flex-col items-center gap-2 text-muted-foreground">
+                <div className="relative mt-10 flex flex-col items-center gap-2 text-muted-foreground">
                     <span className="text-sm">
-
                         Discover trending learning paths
                     </span>
 
@@ -54,91 +70,62 @@ const ExplorePage = () => {
                 </div>
             </section>
 
-            <section className="mx-auto mb-10 text-center">
-                <div className="">
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-                        Trending Series
-                    </h2>
-                    <p className="mt-3 text-base text-muted-foreground">
-                        Explore curated series that match your interests.
+            <section className="mx-auto mb-10 mt-16 text-center">
+                <div className="mb-6 text-left md:text-center">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">Trending now</p>
+                    <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Featured learning series</h2>
+                    <p className="mt-3 text-base text-muted-foreground md:max-w-2xl md:mx-auto">
+                        Explore curated series designed to help you build depth, not just consume content.
                     </p>
                 </div>
 
-
-                <TopSeries
-                    isInitialPage={isInitialPage}
-                />
-
+                <div className="rounded-[30px] border border-border/60 bg-card/60 p-2 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-4">
+                    <TopSeries isInitialPage={isInitialPage} />
+                </div>
             </section>
 
-
-            {/* ARTICLES */}
-            <section className="mt-12 border-t border-border/50 pt-20">
-
-                <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <section className="mt-8 border-t border-border/60 pt-12 md:pt-16">
+                <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
-                            Latest Articles
-                        </h2>
-
-                        <p className="mt-2 text-muted-foreground">
-                            Fresh insights from the community.
-                        </p>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-primary">Fresh reads</p>
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">Latest articles</h2>
                     </div>
 
-                    <span className="text-sm text-muted-foreground">
-                        {articles?.pagination?.total ?? 0} Articles
+                    <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-sm text-muted-foreground">
+                        {articles?.pagination?.total ?? 0} articles
                     </span>
                 </div>
 
-                <div className="min-h-125">
-
-                    {/* Featured Blog */}
-                    {isInitialPage &&
-                        <div className="mb-20">
-                            <FeaturedArticle
-                                page={page}
-                            />
+                <div className="min-h-80">
+                    {isInitialPage && (
+                        <div className="mb-16 mt-8">
+                            <FeaturedArticle page={page} />
                         </div>
-                    }
+                    )}
 
-                    <div className="mb-8 mt-16 flex items-center gap-2">
-                        <BookOpen className="h-5 w-5 text-primary" />
-
-                        <h3 className="text-xl font-semibold">
-                            Continue Reading
-                        </h3>
+                    <div className="mb-8 mt-8 flex items-center gap-2">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+                            <BookOpen className="h-4 w-4" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-foreground">Continue reading</h3>
                     </div>
 
-                    {/* Rest Blogs */}
-
                     <RestArticles page={page} />
-
                 </div>
-
             </section>
 
-            {/* PAGINATION */}
-            {!isPending &&
-                !isError &&
-                articles?.pagination?.totalPages > 1 && (
-
-                    <footer className="mt-24 border-t pt-12">
-
-                        <PaginationUI
-                            page={page}
-                            totalPages={
-                                articles?.pagination?.totalPages || 1
-                            }
-                            onPageChange={(newPage) => {
-                                setPage(newPage);
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                            }}
-                        />
-
-                    </footer>
-                )}
-
+            {!isPending && !isError && articles?.pagination?.totalPages > 1 && (
+                <footer className="mt-24 border-t border-border/60 pt-12">
+                    <PaginationUI
+                        page={page}
+                        totalPages={articles?.pagination?.totalPages || 1}
+                        onPageChange={(newPage) => {
+                            setPage(newPage)
+                            window.scrollTo({ top: 0, behavior: 'smooth' })
+                        }}
+                    />
+                </footer>
+            )}
         </div>
     )
 }

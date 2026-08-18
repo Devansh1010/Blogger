@@ -25,6 +25,8 @@ export interface SeriesListSectionProps {
     series: Series[];
     limit?: number;
     viewAllHref?: string;
+    topRight?: React.ReactNode;
+    renderTopRight?: (series: Series) => React.ReactNode;
     className?: string;
 }
 

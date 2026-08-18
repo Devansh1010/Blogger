@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { setFeaturedSeries } from "../../axios/user.axios";
+import { AxiosError } from "axios";
 
 
 export const useFeaturedSeries = () => {
@@ -9,12 +10,17 @@ export const useFeaturedSeries = () => {
     const mutation = useMutation({
         mutationFn: setFeaturedSeries,
 
-        onSuccess: () => {
+        onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["user-profile"] });
-            toast.success("Updated Successfully");
+            queryClient.invalidateQueries({ queryKey: ["user-series"] });
+            toast.success(data?.message ?? "Updated Successfully");
         },
 
-        onError: () => toast.error("Failed to Update"),
+        onError: (error: AxiosError<{ message: string }>) => {
+            toast.error(
+                error.response?.data?.message ?? "Failed to update"
+            );
+        },
     });
 
     return mutation

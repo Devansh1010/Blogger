@@ -17,10 +17,10 @@ const RestArticles = ({ page }: { page: number }) => {
     if (isError) return <ArticleListError reset={refetch} />
 
     return (
-
         <ArticleListPage
             title={''}
             articles={articles.blogs}
+            className="mt-0 rounded-none border-0 bg-transparent p-0 shadow-none md:p-0"
         />
     )
 }

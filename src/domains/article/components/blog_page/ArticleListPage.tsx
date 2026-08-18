@@ -12,6 +12,7 @@ const ArticleListPage = ({
     limit,
     viewAllHref,
     topRight,
+    renderTopRight,
     className
 }: ArticleListSectionProps) => {
     const displayedArticles = limit
@@ -21,14 +22,13 @@ const ArticleListPage = ({
     return (
         <section
             className={cn(
-                "mx-auto mt-12 w-full max-w-7xl p-8 md:p-0 lg:p-0",
+                "mx-auto mt-12 w-full max-w-7xl rounded-[28px] border border-border/60 bg-card/70 p-5 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-6",
                 className
             )}
         >
-            {/* Section Header */}
-            <div className="mb-6 flex items-end justify-between gap-4">
+            <div className="mb-6 flex items-end justify-between gap-4 border-b border-border/60 pb-4">
                 <div>
-                    <h2 className="text-xl font-semibold tracking-tight">
+                    <h2 className="text-xl font-semibold tracking-tight text-foreground">
                         {title}
                     </h2>
 
@@ -72,7 +72,7 @@ const ArticleListPage = ({
                         <ArticleCard
                             key={article._id}
                             article={article}
-                            topRight={topRight}
+                            topRight={renderTopRight ? renderTopRight(article) : topRight}
                         />
                     ))}
                 </div>

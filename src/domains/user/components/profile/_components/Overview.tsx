@@ -7,6 +7,7 @@ import EditProfile from '../EditProfile'
 import CoverImage from './CoverImage'
 import { Badges } from '@/domains/user/type'
 import Image from 'next/image'
+import ResetPassword from './ResetPassword'
 
 const Overview = ({ userId }: { userId: string }) => {
     const {
@@ -27,133 +28,112 @@ const Overview = ({ userId }: { userId: string }) => {
         )
 
     return (
-        <section className="relative">
-            {/* Cover */}
+        <section className="relative pb-4">
             <CoverImage userId={userId} />
 
-            {/* Profile Content */}
             <div className="mx-auto max-w-5xl px-6">
                 <div className="relative -mt-14">
+                    <div className="rounded-[30px] border border-border/70 bg-background/80 p-5 shadow-[0_18px_50px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl sm:p-6">
+                        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                            <div className="flex items-end gap-4">
+                                <Avatar className="h-28 w-28 border-4 border-background shadow-lg sm:h-32 sm:w-32">
+                                    <AvatarImage
+                                        src={profile?.avatar ?? ""}
+                                        alt={profile?.username ?? "Profile"}
+                                    />
 
-                    {/* Avatar + Actions */}
-                    <div className="flex items-end justify-between">
-                        <Avatar className="h-28 w-28 border-4 border-background shadow-lg">
-                            <AvatarImage
-                                src={profile?.avatar ?? ""}
-                                alt={profile?.username ?? "Profile"}
-                            />
+                                    <AvatarFallback className="text-3xl font-semibold">
+                                        {profile?.username?.[0]?.toUpperCase() ?? "U"}
+                                    </AvatarFallback>
+                                </Avatar>
 
-                            <AvatarFallback className="text-3xl font-semibold">
-                                {profile?.username?.[0]?.toUpperCase() ?? "U"}
-                            </AvatarFallback>
-                        </Avatar>
+                                <div className="pb-2">
+                                    <p className="mb-2 inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+                                        Creator profile
+                                    </p>
+                                    <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                                        {profile?.username}
+                                    </h1>
+                                </div>
+                            </div>
 
-                        {/* Action */}
-                        <div className="mb-1">
-                            {userData?.isOwner ? (
-                                <EditProfile userId={userId} />
-                            ) : (
-                                <Button size="sm">
-                                    Follow
-                                </Button>
+                            <div className="flex flex-wrap items-center gap-2">
+                                {userData?.isOwner ? (
+                                    <>
+                                        <EditProfile userId={userId} />
+                                        <ResetPassword />
+                                    </>
+                                ) : (
+                                    <Button size="sm" className="rounded-lg px-5 font-medium">
+                                        Follow
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="mt-5">
+                            {selectedBadges.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedBadges.map((badge: Badges) => (
+                                        <div
+                                            key={badge.id}
+                                            className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/60 px-3 py-1.5 transition-colors hover:bg-muted"
+                                        >
+                                            <Image
+                                                src={badge.icon}
+                                                alt={badge.name}
+                                                width={24}
+                                                height={24}
+                                                className="h-6 w-6 object-contain"
+                                            />
+
+                                            <span className="text-sm font-medium">
+                                                {badge.name}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
                             )}
                         </div>
-                    </div>
 
-                    {/* Identity */}
-                    <div className="mt-4">
-
-                        {/* Username */}
-                        <h1 className="text-3xl font-bold tracking-tight">
-                            {profile?.username}
-                        </h1>
-
-                        {/* Badges */}
-                        {selectedBadges.length > 0 && (
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                {selectedBadges.map((badge: Badges) => (
-                                    <div
-                                        key={badge.id}
-                                        className="
-                                    inline-flex items-center gap-2
-                                    rounded-full
-                                    border
-                                    bg-muted/50
-                                    px-3 py-1.5
-                                    transition-colors
-                                    hover:bg-muted
-                                "
-                                    >
-                                        <Image
-                                            src={badge.icon}
-                                            alt={badge.name}
-                                            width={24}
-                                            height={24}
-                                            className="h-6 w-6 object-contain"
-                                        />
-
-                                        <span className="text-sm font-medium">
-                                            {badge.name}
-                                        </span>
-                                    </div>
-                                ))}
+                        <div className="mt-6 grid gap-3 border-t border-border/70 pt-5 sm:grid-cols-2 lg:grid-cols-4">
+                            <div className="rounded-2xl border border-border/60 bg-muted/40 px-4 py-3">
+                                <div className="text-xl font-bold text-foreground">
+                                    {profile?.followers ?? 0}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                    Followers
+                                </div>
                             </div>
-                        )}
 
-                    </div>
+                            <div className="rounded-2xl border border-border/60 bg-muted/40 px-4 py-3">
+                                <div className="text-xl font-bold text-foreground">
+                                    {userData?.articleCount ?? 0}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                    Articles
+                                </div>
+                            </div>
 
-                    {/* Stats */}
-                    <div
-                        className="
-                    mt-6
-                    flex flex-wrap
-                    items-center
-                    gap-x-8 gap-y-3
-                    border-t
-                    pt-5
-                "
-                    >
-                        <div className="flex items-center gap-1.5">
-                            <span className="font-semibold">
-                                {profile?.followers ?? 0}
-                            </span>
+                            <div className="rounded-2xl border border-border/60 bg-muted/40 px-4 py-3">
+                                <div className="text-xl font-bold text-foreground">
+                                    {userData?.seriesCount ?? 0}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                    Series
+                                </div>
+                            </div>
 
-                            <span className="text-sm text-muted-foreground">
-                                Followers
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5">
-                            <span className="font-semibold">
-                                {userData?.articleCount ?? 0}
-                            </span>
-
-                            <span className="text-sm text-muted-foreground">
-                                Articles
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5">
-                            <span className="font-semibold">
-                                {userData?.seriesCount ?? 0}
-                            </span>
-
-                            <span className="text-sm text-muted-foreground">
-                                Series
-                            </span>
-                        </div>
-
-                        <div className="flex items-center gap-1.5">
-                            <span className="font-semibold">
-                                {userData?.totalViews ?? 0}
-                            </span>
-
-                            <span className="text-sm text-muted-foreground">
-                                Views
-                            </span>
+                            <div className="rounded-2xl border border-border/60 bg-muted/40 px-4 py-3">
+                                <div className="text-xl font-bold text-foreground">
+                                    {userData?.totalViews ?? 0}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                    Views
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </section>

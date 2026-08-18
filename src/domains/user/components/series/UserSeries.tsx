@@ -32,27 +32,18 @@ const UserSeries = () => {
     if (isError) return <UserArticleError onRetry={refetch} />
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-5 pt-20">
-
-            <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 pb-8">
-                <h1 className="text-3xl md:text-5xl font-serif font-bold leading-tight text-foreground">
-                    <span className="flex items-center gap-3">
-                        My Series
-                    </span>
-                </h1>
-
-                {/* <div className="flex items-center gap-3 w-full md:w-auto">
-                    <div className="relative group w-full md:w-72">
-                        <UserArticleSearch
-                            value={search}
-                            setValue={setSearch}
-                        />
+        <div className="mx-auto max-w-7xl px-6 py-8 pt-20">
+            <header className="mb-8 rounded-[28px] border border-border/60 bg-card/70 p-5 shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)] backdrop-blur-sm sm:p-6">
+                <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h1 className="text-3xl font-serif font-bold leading-tight text-foreground md:text-5xl">
+                            My Series
+                        </h1>
                     </div>
-                </div> */}
+                </div>
             </header>
 
-            <main className="min-h-125">
-
+            <main className="min-h-[20rem]">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                     {userSeries?.map((series: Series) => (
                         <SeriesCard
@@ -70,11 +61,10 @@ const UserSeries = () => {
                         />
                     ))}
                 </div>
-
             </main>
 
-            <footer className="flex flex-col items-center gap-6 pt-12 border-t border-border/40">
-                <div className="text-[10px] font-mono text-muted-foreground/30 uppercase tracking-widest">
+            <footer className="mt-12 flex flex-col items-center gap-6 border-t border-border/40 pt-12">
+                <div className="text-[10px] font-mono uppercase tracking-[0.28rem] text-muted-foreground/40">
                     End of Transmission
                 </div>
                 <PaginationUI

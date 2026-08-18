@@ -11,6 +11,7 @@ export const useFeaturedArticle = () => {
 
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ["user-articles"] });
+            queryClient.invalidateQueries({ queryKey: ["user-profile"] });
             toast.success(data?.message ?? "Updated Successfully");
         },
 
