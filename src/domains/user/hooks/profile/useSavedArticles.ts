@@ -7,7 +7,6 @@ export const useSavedArticles = (userId: string, page = 1, limit = 10) => {
     const { data, isPending, isError, refetch } = useQuery({
         queryKey: ['user-saved', { userId, page }],
         queryFn: () => getSavedArticles(userId, page, limit),
-        keepPreviousData: true,
     })
 
     return {

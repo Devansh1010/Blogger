@@ -14,12 +14,9 @@ import { useSavedArticles } from "@/domains/user/hooks/profile/useSavedArticles"
 import SavedArticleSkeleton from "../loader/SavedArticleSkeleton";
 import SavedArticleError from "../error/SavedArticleError";
 import { Article } from "@/domains/article/type";
+import { SavedArticleProps } from "@/domains/user/type";
 
-interface SavedArticleProps {
-    userId: string;
-    limit?: number;
-    viewAllHref?: string;
-}
+
 
 const SavedArticle = ({
     userId,
@@ -32,6 +29,8 @@ const SavedArticle = ({
         isError,
     } = useSavedArticles(userId);
 
+    
+
     if (isPending) {
         return <SavedArticleSkeleton />;
     }
@@ -41,8 +40,8 @@ const SavedArticle = ({
     }
 
     const displayedArticles = limit
-        ? savedArticle?.slice(0, limit)
-        : savedArticle;
+        ? savedArticle?.articles?.slice(0, limit)
+        : savedArticle.articles;
 
     return (
         <section className="mx-auto mt-14 w-full max-w-5xl">
@@ -106,7 +105,7 @@ const SavedArticle = ({
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                             />
                                         ) : (
-                                            <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-background">
+                                            <div className="flex h-full items-center justify-center bg-linear-to-br from-muted to-background">
                                                 <Bookmark className="size-8 text-muted-foreground/40" />
                                             </div>
                                         )}

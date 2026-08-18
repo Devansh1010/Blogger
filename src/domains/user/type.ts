@@ -39,3 +39,9 @@ export interface Badges {
   rarity?: string,
   color?: string,
 }
+
+export interface SavedArticleProps {
+  userId: string;
+  limit?: number;
+  viewAllHref?: string;
+}

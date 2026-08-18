@@ -21,9 +21,7 @@ import BadgeSelector from './_components/BadgeSelector';
 const EditProfile = ({ userId }: { userId: string }) => {
 
     const { userData } = useGetUserProfile(userId)
-
-    console.log(userData)
-
+    
     const form = useProfileForm()
 
     useResetProfileForm(form, userData.userProfile)

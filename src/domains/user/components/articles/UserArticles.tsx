@@ -52,7 +52,7 @@ const UserArticles = () => {
                 </div>
             </header>
 
-            <main className="min-h-[20rem]">
+            <main className="min-h-80">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                     {userArticles?.blogs?.map((article: Article) => (
                         <ArticleCard

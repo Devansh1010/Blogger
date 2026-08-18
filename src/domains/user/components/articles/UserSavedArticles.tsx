@@ -6,6 +6,7 @@ import ArticleCard from '@/domains/article/components/blog_page/_components/Arti
 import { useSavedArticles } from '@/domains/user/hooks/profile/useSavedArticles'
 import { useSearchParams } from 'next/navigation'
 import UserSavedArticlesSkeleton from './loader/UserSavedArticlesSkeleton'
+import { Article } from '@/domains/article/type'
 
 const UserSavedArticles = () => {
   const searchParams = useSearchParams()
@@ -16,7 +17,7 @@ const UserSavedArticles = () => {
   // The frontend keeps userId empty string because backend verifies session
   const userId = searchParams?.get('userId') || ''
 
-  const { savedArticle, isPending, isError, refetch } = useSavedArticles(userId, page, 10)
+  const { savedArticle, isPending, isError, } = useSavedArticles(userId, page, 10)
 
   if (isPending) return <UserSavedArticlesSkeleton />
   if (isError) return <div className="mx-auto max-w-7xl px-6 py-8">Error loading saved articles</div>
@@ -33,9 +34,9 @@ const UserSavedArticles = () => {
         </div>
       </header>
 
-      <main className="min-h-[20rem]">
+      <main className="min-h-80">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {articles.map((article: any) => (
+          {articles.map((article: Article) => (
             <ArticleCard key={article._id} article={article} />
           ))}
         </div>
