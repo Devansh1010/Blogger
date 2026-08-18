@@ -98,7 +98,7 @@ export const setFeaturedSeries = async (seriesId: string) => {
 
 };
 
-export const getSavedArticles = async (userId: string) => {
+export const getSavedArticles = async (userId: string, page = 1, limit = 10) => {
 
     const { user, success } = await VerifyUser()
 
@@ -126,6 +126,6 @@ export const getSavedArticles = async (userId: string) => {
         }, StatusCode.TOO_MANY_REQUESTS)
     }
 
-    return await fetchSavedArticles(userId)
+    return await fetchSavedArticles(userId, page, limit)
 
 }

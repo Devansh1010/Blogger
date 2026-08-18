@@ -62,9 +62,9 @@ export const setFeaturedSeries = async (seriesId: string) => {
     return res.data
 };
 
-export const getSavedArticles = async (userId: string) => {
+export const getSavedArticles = async (userId: string, page = 1, limit = 10) => {
 
-    const res = await userApi.get(`/saved/article?userId=${userId}`)
+    const res = await userApi.get(`/saved/article?userId=${userId}&page=${page}&limit=${limit}`)
 
     return res.data.data
 }

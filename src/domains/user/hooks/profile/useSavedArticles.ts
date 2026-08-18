@@ -3,10 +3,11 @@
 import { useQuery } from "@tanstack/react-query"
 import { getSavedArticles } from "../../axios/user.axios"
 
-export const useSavedArticles = (userId: string) => {
+export const useSavedArticles = (userId: string, page = 1, limit = 10) => {
     const { data, isPending, isError, refetch } = useQuery({
-        queryKey: ['user-saved'],
-        queryFn: () => getSavedArticles(userId),
+        queryKey: ['user-saved', { userId, page }],
+        queryFn: () => getSavedArticles(userId, page, limit),
+        keepPreviousData: true,
     })
 
     return {

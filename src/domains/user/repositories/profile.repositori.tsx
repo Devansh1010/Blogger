@@ -381,11 +381,13 @@ export const setUserFeaturedSeries = async ({ seriesId, userId }: { seriesId: st
     }
 }
 
-export const fetchSavedArticles = async (userId: string) => {
+export const fetchSavedArticles = async (userId: string, page = 1, limit = 10) => {
     try {
         await dbConnect()
 
-        const savedArticles = await ImpactModel.aggregate([
+        const skip = (page - 1) * limit
+
+        const pipeline = [
             {
                 $match: {
                     authorId: new mongoose.Types.ObjectId(userId),
@@ -393,6 +395,7 @@ export const fetchSavedArticles = async (userId: string) => {
                 }
             },
 
+            // join with blog and author
             {
                 $lookup: {
                     from: "blogs",
@@ -402,9 +405,7 @@ export const fetchSavedArticles = async (userId: string) => {
                 }
             },
 
-            {
-                $unwind: "$article"
-            },
+            { $unwind: "$article" },
 
             {
                 $lookup: {
@@ -415,9 +416,7 @@ export const fetchSavedArticles = async (userId: string) => {
                 }
             },
 
-            {
-                $unwind: "$author"
-            },
+            { $unwind: "$author" },
 
             {
                 $project: {
@@ -438,19 +437,36 @@ export const fetchSavedArticles = async (userId: string) => {
                     }
                 }
             }
+        ]
+
+        // Use facet to get paginated data and total count
+        const agg = await ImpactModel.aggregate([
+            ...pipeline,
+            { $sort: { createdAt: -1 } },
+            {
+                $facet: {
+                    data: [ { $skip: skip }, { $limit: limit } ],
+                    totalCount: [ { $count: 'count' } ]
+                }
+            }
         ])
 
-        if (savedArticles.length === 0) {
-            return createResponse({
-                success: false,
-                message: 'No Saved Articles'
-            }, StatusCode.NOT_FOUND)
-        }
+        const results = agg[0] || { data: [], totalCount: [] }
+        const total = results.totalCount[0]?.count ?? 0
+        const totalPages = Math.max(1, Math.ceil(total / limit))
 
         return createResponse({
             success: true,
             message: 'Saved Articles found',
-            data: savedArticles
+            data: {
+                articles: results.data,
+                pagination: {
+                    total,
+                    page,
+                    limit,
+                    totalPages
+                }
+            }
         }, StatusCode.OK)
 
     } catch (error) {

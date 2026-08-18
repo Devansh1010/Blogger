@@ -8,7 +8,6 @@ export const BADGES = [
     rarity: 'legendary',
     // maximum number of users that can receive this badge. honoured to the earliest joiners
     maxAwards: 100,
-    // visual accent for advanced design (frontend can consume)
     color: '#FFD700',
   },
   {
