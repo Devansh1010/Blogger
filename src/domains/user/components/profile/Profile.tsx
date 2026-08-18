@@ -81,7 +81,7 @@ const Profile = ({ userId }: { userId: string }) => {
                 <SavedArticle
                     userId={userId}
                     limit={2}
-                    viewAllHref={`/user/my-blogs?saved=true`}
+                    viewAllHref={`/user/saved-articles`}
                 />
             }
         </div>

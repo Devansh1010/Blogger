@@ -33,7 +33,7 @@ export function Navbar() {
 
     const userMenu = [
         { name: 'My Articles', href: '/user/my-blogs' },
-        { name: 'Saved Articles', href: '/user/my-blogs?saved=true' },
+        { name: 'Saved Articles', href: '/user/saved-articles' },
         { name: 'Profile', href: `/user/profile/${session?.user?._id}` },
     ]
 
