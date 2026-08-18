@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { PaginationUI } from '@/components/features/series/components/PaginationUi'
 import ArticleCard from '@/domains/article/components/blog_page/_components/ArticleCard'
 import { useSavedArticles } from '@/domains/user/hooks/profile/useSavedArticles'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
+import UserSavedArticlesSkeleton from './loader/UserSavedArticlesSkeleton'
 
 const UserSavedArticles = () => {
   const searchParams = useSearchParams()
@@ -17,7 +18,7 @@ const UserSavedArticles = () => {
 
   const { savedArticle, isPending, isError, refetch } = useSavedArticles(userId, page, 10)
 
-  if (isPending) return <div className="mx-auto max-w-7xl px-6 py-8">Loading saved articles...</div>
+  if (isPending) return <UserSavedArticlesSkeleton />
   if (isError) return <div className="mx-auto max-w-7xl px-6 py-8">Error loading saved articles</div>
 
   const articles = savedArticle?.articles ?? []

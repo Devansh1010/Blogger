@@ -7,7 +7,9 @@ import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { ModeToggle } from "./theme"
-import { useSession } from "next-auth/react"
+import { useSession, signOut } from "next-auth/react"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from './ui/dropdown-menu'
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar'
 
 export function Navbar() {
 
@@ -26,9 +28,13 @@ export function Navbar() {
 
     const navLinks = [
         { name: "Explore", href: "/user/explore" },
-        { name: "My Blogs", href: "/user/my-blogs" },
         { name: "My Series", href: "/user/series" },
-        { name: "Profile", href: `/user/profile/${session?.user?._id}` },
+    ]
+
+    const userMenu = [
+        { name: 'My Articles', href: '/user/my-blogs' },
+        { name: 'Saved Articles', href: '/user/my-blogs?saved=true' },
+        { name: 'Profile', href: `/user/profile/${session?.user?._id}` },
     ]
 
     return (
@@ -67,11 +73,47 @@ export function Navbar() {
 
                     {
                         session?.user ? (
-                            <Link href="/write-blog">
-                                <Button variant="outline" size="sm">
-                                    Write a Story
-                                </Button>
-                            </Link>
+                            <div className="flex items-center gap-3">
+                                <Link href="/write-blog">
+                                    <Button variant="outline" size="sm">
+                                        Write a Story
+                                    </Button>
+                                </Link>
+
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="rounded-full focus:outline-none">
+                                            <Avatar className="h-10 w-10">
+                                                {session?.user?.image ? (
+                                                    <AvatarImage src={session.user.image} alt={session.user.name || 'User'} />
+                                                ) : (
+                                                    <AvatarFallback>{session?.user?.name?.[0]?.toUpperCase() ?? 'U'}</AvatarFallback>
+                                                )}
+                                            </Avatar>
+                                        </button>
+                                    </DropdownMenuTrigger>
+
+                                    <DropdownMenuContent>
+                                        {userMenu.map((item) => (
+                                            <DropdownMenuItem key={item.name} asChild>
+                                                <Link href={item.href} className="block w-full">
+                                                    {item.name}
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        ))}
+
+                                        <DropdownMenuSeparator />
+
+                                        <DropdownMenuItem onSelect={() => signOut()}>
+                                            Sign out
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                <div className="">
+                                    <ModeToggle />
+                                </div>
+                            </div>
                         ) : (
                             <Link href="/auth/signin">
                                 <Button size="sm" className="rounded-full px-5 font-bold text-xs uppercase tracking-widest">
@@ -80,12 +122,6 @@ export function Navbar() {
                             </Link>
                         )
                     }
-
-
-                    {/* Theme Toggle */}
-                    <div className="">
-                        <ModeToggle />
-                    </div>
                 </div>
 
                 {/* MOBILE TOGGLE */}
@@ -127,6 +163,30 @@ export function Navbar() {
                                     {link.name}
                                 </Link>
                             ))}
+
+                                {session?.user && (
+                                    <div className="mt-3 space-y-1">
+                                        {userMenu.map((link) => (
+                                            <Link
+                                                key={link.name}
+                                                href={link.href}
+                                                onClick={() => setIsOpen(false)}
+                                                className={cn(
+                                                    "block rounded-lg px-4 py-3 text-base font-medium transition-colors",
+                                                    pathname === link.href
+                                                        ? "bg-primary/10 text-primary"
+                                                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                                                )}
+                                            >
+                                                {link.name}
+                                            </Link>
+                                        ))}
+
+                                        <button onClick={() => { setIsOpen(false); signOut(); }} className="block w-full text-left rounded-lg px-4 py-3 text-base font-medium text-destructive">
+                                            Sign out
+                                        </button>
+                                    </div>
+                                )}
                         </div>
 
                         <div className="my-5 border-t" />
